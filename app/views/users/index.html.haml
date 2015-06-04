@@ -1,0 +1,10 @@
+%table.table.table-striped.table-bordered
+  %tr
+    %th User
+  -@users.each do |user|
+    %tr
+      %td
+        = link_to user.email, user
+
+%p
+=link_to "Sign up a user", new_user_registration_path

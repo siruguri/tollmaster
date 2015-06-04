@@ -1,0 +1,28 @@
+.hidden#publishable-key{'data-key-value' => @publishable_stripe_key}
+
+= form_tag('/payments', id: 'payments-form') do
+  = label_tag(:primary_key, 'Payment for (phone)', class: 'form-control')
+  = text_field_tag(:primary_key, '', class: 'form-control')
+  .form-row
+    .payment-errors
+    = label_tag(:cc_number, 'CC #', class: 'form-control')
+    %input#cc_number.form-control{"data-stripe" => "number"}
+    = label_tag(:cvc, 'CVC', class: 'form-control')
+    %input.form-control#cvc{"data-stripe" => "cvc"}
+  .row.form-row
+    .col-xs-6
+      = label_tag(:exp_month, 'Exp Month', class: 'form-control')
+    .col-xs-6
+      = label_tag(:exp_year, 'Exp Year', class: 'form-control')
+  .row
+    .col-xs-6
+      %input.form-control#exp_month{"data-stripe" => "exp-month"}
+    .col-xs-6
+      %input.form-control#exp_year{"data-stripe" => "exp-year"}
+  
+  .form-row
+    = label_tag(:amount, 'Amount', class: 'form-control')
+    = text_field_tag :amount, '', {class: 'form-control'}
+
+  .form-row
+    = submit_tag 'Pay', class: 'btn btn-default', id: 'form-submit'

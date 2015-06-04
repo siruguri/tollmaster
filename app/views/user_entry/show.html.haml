@@ -1,0 +1,8 @@
+.hidden#publishable-key{'data-key-value' => @publishable_stripe_key}
+.error-box.my-hidden
+    
+= form_tag('/user_entry', id: 'entry-form') do
+  = text_field_tag(:primary_key, '', class: 'form-control', id: 'primary-key', autofocus: true, placeholder: 'Enter your phone number')
+
+  .form-row
+    = submit_tag 'Go!', class: 'btn btn-default', id: 'pk-submit'

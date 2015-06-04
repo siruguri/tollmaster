@@ -1,0 +1,21 @@
+%h1 Listing navbar_entries
+
+%table
+  %tr
+    %th Title
+    %th Url
+    %th
+    %th
+    %th
+
+  - @navbar_entries.each do |navbar_entry|
+    %tr
+      %td= navbar_entry.title
+      %td= navbar_entry.url
+      %td= link_to 'Show', navbar_entry
+      %td= link_to 'Edit', edit_navbar_entry_path(navbar_entry)
+      %td= link_to 'Destroy', navbar_entry, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+%br
+
+= link_to 'New Navbar entry', new_navbar_entry_path

@@ -1,0 +1,17 @@
+#dash-error.my-hidden.paragraph
+  
+.paragraph
+  = "Welcome, #{@user.displayable_greeting}"
+
+%div.my-hidden#link-secret{'data-value' => @user.secret_link.secret}
+    
+- if @payment_option == :check_out
+  = form_tag '/dash/open', class: 'dash-action-form' do
+    %input.btn.btn-default{type: 'submit', value: 'Open Door'}
+  = form_tag '/dash/checkout', class: 'dash-action-form' do
+    %input.btn.btn-default{type: 'submit', value: 'Check out'}
+- elsif @payment_option == :check_in
+  = form_tag '/dash/checkin', class: 'dash-action-form' do
+    %input.btn.btn-default{type: 'submit', value: 'Check in'}
+
+

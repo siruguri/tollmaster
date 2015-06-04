@@ -1,0 +1,32 @@
+%nav.navbar.navbar-default{role: "navigation"}
+  .container
+    .navbar-header
+      %button.navbar-toggle{type: "button", "data-toggle" => "collapse", "data-target" => "#bs-example-navbar-collapse-1"}
+        %span.sr-only Toggle navigation
+        %span.icon-bar
+        %span.icon-bar
+        %span.icon-bar
+      %a.navbar-brand{href: "#"} 
+        = t(:site_brand)
+
+    .collapse.navbar-collapse{id: "bs-example-navbar-collapse-1"}
+      %ul.nav.navbar-nav
+        // Let's put the first two entries outside the dropdown
+        - @navbar_entries[0..1].each do |entry|
+          %li
+            = link_to t(entry[:title]), entry[:url]
+
+        // And then the rest in the dropdown
+        - if !@navbar_entries[2].nil?
+          %li.dropdown 
+            %a.dropdown-toggle{href: "#", "data-toggle" => "dropdown"} 
+              More
+              %b.caret
+            %ul.dropdown-menu
+              - @navbar_entries[2..-1].each do |entry|
+                %li
+                  = link_to t(entry[:title]), entry[:url]
+
+
+
+

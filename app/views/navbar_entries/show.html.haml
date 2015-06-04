@@ -1,0 +1,12 @@
+%p#notice= notice
+
+%p
+  %b Title:
+  = @navbar_entry.title
+%p
+  %b Url:
+  = @navbar_entry.url
+
+= link_to 'Edit', edit_navbar_entry_path(@navbar_entry)
+\|
+= link_to 'Back', navbar_entries_path

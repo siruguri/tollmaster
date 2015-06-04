@@ -1,0 +1,9 @@
+ptr_1:
+  user: user_1
+  token_processor: stripe
+  token_value: tok_uu_tok
+
+ptr_phonenumber:
+  user: user_ptr_phonenumber
+  token_processor: stripe
+  token_value: user_ptr_token

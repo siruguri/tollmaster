@@ -1,0 +1,14 @@
+paid_session_1:
+  user: user_with_paid_session
+  started_at: <%= Time.now.utc %>
+  active: true
+complete_session_1:
+  user: user_with_completed_sessions
+  started_at: <%= Time.new(2015, 01, 01) + 2.hours %>
+  ended_at: <%= Time.new(2015, 01, 01) + 3.hours + 15.minutes + 15.seconds %>
+  active: false
+complete_session_2:
+  user: user_with_completed_sessions_2
+  started_at: <%= Time.new(2015, 01, 01) + 2.hours %>
+  ended_at: <%= nil %>
+  active: true

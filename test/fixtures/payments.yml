@@ -1,0 +1,4 @@
+payment_1:
+  payment_token_record: ptr_1
+  amount: '3000'
+  payment_date: <%= Time.now.utc %>
