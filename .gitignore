@@ -34,3 +34,4 @@ config/secrets.yml
 bower.json
 .DS_Store
 *.rdb
+public/assets/

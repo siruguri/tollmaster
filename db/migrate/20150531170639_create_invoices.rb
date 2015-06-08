@@ -5,6 +5,8 @@ class CreateInvoices < ActiveRecord::Migration
       t.float :amount
       t.integer :invoice_status
       t.datetime :pay_by
+
+      t.timestamps
     end
   end
 end

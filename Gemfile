@@ -52,8 +52,12 @@ group :production do
   gem 'execjs'
   gem 'thin'
   # Uncomment this for Heroku
-  gem 'rails_12factor'
+  # gem 'rails_12factor'
 end
+
+gem 'sidekiq'
+# Required for sidekiq monitoring
+gem 'sinatra', :require => nil
 
 group :development, :test do
   # Use sqlite3 as the database for Active Record in dev and test envs  

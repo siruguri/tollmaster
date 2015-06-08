@@ -4,6 +4,8 @@ class CreatePaymentTokenRecord < ActiveRecord::Migration
       t.integer :user_id
       t.string :token_processor
       t.string :token_value
+
+      t.timestamps
     end
   end
 end

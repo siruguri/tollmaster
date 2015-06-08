@@ -6,6 +6,8 @@ require 'capistrano/bundler'
 require 'capistrano/rvm'
 require 'capistrano/rails/migrations'
 require 'capistrano/rails/assets'
+require 'capistrano/sidekiq'
+require 'capistrano/sidekiq/monit' #to require monit tasks # Only for capistrano3
 
 namespace :deploy do 
   desc "Symlink an ENV file for the dotenv gem"
