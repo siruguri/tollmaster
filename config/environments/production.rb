@@ -76,7 +76,17 @@ TollMaster::Application.configure do
   # config.autoflush_log = false
 
   # Use default logging formatter so that PID and timestamp are not suppressed.
+
   config.log_formatter = ::Logger::Formatter.new
+  config.action_mailer.default_url_options = { :host => '107.170.193.44', port: 80 }
+  config.action_mailer.smtp_settings = {
+      :address        => 'smtp.mandrilapp.com',
+      :port           => '587',
+      :authentication => :plain,
+      :user_name      => ENV['MANDRILL_USERNAME'],
+      :password       => ENV['MANDRILL_PASSWORD'],
+      :enable_starttls_auto => true
+  }
 
   Rails.application.default_url_options.merge!({host: Rails.application.secrets.default_host, port: '80'})
 end

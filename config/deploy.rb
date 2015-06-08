@@ -4,7 +4,7 @@ lock '3.4.0'
 app_name = 'tollmaster'
 set :application, app_name
 set :full_app_name, app_name
-set :repo_url, "git@github.com:siruguri/#{app_name}.git"
+set :repo_url, "https://www.github.com/siruguri/#{app_name}.git"
 set :repository, "git@github.com:siruguri/#{app_name}.git"
 
 set :bundle_without, [:test]
