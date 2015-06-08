@@ -28,12 +28,14 @@ body {
 
   form {
     .form-row {
-      margin-top: 10px;
+      margin-top: 5px;
     }
 
     label.form-control {
       background-color: transparent;
       border-color: transparent;
+      padding-bottom: 5px;
+      padding-left: 0px;
     }
   }
 }
@@ -55,4 +57,14 @@ body {
 .dash-action-form {
   display: inline-block;
   margin-right: 10px;
+}
+
+.center-div {
+  margin: 0 auto;
+}
+
+.notice {
+  padding: 5px;
+  background-color: #FFCC00;
+  margin-bottom: 10px;
 }

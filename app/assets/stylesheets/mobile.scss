@@ -1,3 +1,19 @@
 .mobile-main {
   background-color: #D1D1D1;
+  margin-top: 10px;
+}
+
+.logo-top {
+  margin-bottom: 20px;
+  width: 200px;
+}
+
+.fake-bgrd {
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+  background-color: rgb(179, 61, 20);
+  top: 0;
+  left: 0;
 }

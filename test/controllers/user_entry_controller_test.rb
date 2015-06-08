@@ -26,7 +26,7 @@ class UserEntryControllerTest < ActionController::TestCase
     it "shows CC deets screen" do
       post :authenticate, {primary_key: '9999999999'}
       assert_template :entry_bottom
-      assert_match /enter credit card/i, response.body
+      assert_match /enter.*cc/i, response.body
     end
   end
 
@@ -34,7 +34,7 @@ class UserEntryControllerTest < ActionController::TestCase
     it "shows resend SMS screen" do
       post :authenticate, {primary_key: '8888888888'}
       assert_template :entry_bottom
-      assert_match /resend sms/i, response.body
+      assert_match /\san.*sms/i, response.body
 
       assert_select('a') do |elt|
         assert_match '/user_entry/resend_sms', elt.attr('href')

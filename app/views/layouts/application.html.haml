@@ -18,14 +18,17 @@
     = csrf_meta_tags
 
   %body
+    .fake-bgrd
     .fixedwidth-container.main.mobile-main
       -if flash[:notice] or flash[:alert]
         .container
         -if flash[:notice]
-          .alert.alert-info
+          .notice.notice-info
             #{flash[:notice]}
         -if flash[:alert]
           .alert.alert-danger
             #{flash[:alert]}
+      .center-div.logo-top
+        = link_to(image_tag('nomadawhat_logo_t.png', class: 'img-responsive'), '/')
 
       = yield
