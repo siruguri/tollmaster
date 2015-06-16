@@ -21,7 +21,7 @@ body {
 }
 
 .fixedwidth-container {
-  width: 450px;
+  max-width: 450px;
   min-height: 600px;
   margin: 0 auto;
   padding: 10px;
