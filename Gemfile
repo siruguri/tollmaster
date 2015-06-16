@@ -21,6 +21,7 @@ gem 'coffee-rails'
 
 # Everybody gotta have some Bootstrap!
 gem 'jquery-rails'
+gem 'jquery-ui-rails'
 gem 'bootstrap-sass'
 
 # Needed for default layouts

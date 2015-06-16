@@ -43,5 +43,5 @@ TollMaster::Application.configure do
       :enable_starttls_auto => true
   }
 
-  Rails.application.default_url_options.merge!({host: Rails.application.secrets.default_host, port: '80'})
+  Rails.application.default_url_options.merge!({host: Rails.application.secrets.default_host, port: '3000'})
 end

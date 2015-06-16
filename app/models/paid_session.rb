@@ -3,24 +3,17 @@ class PaidSession < ActiveRecord::Base
   belongs_to :invoice
   
   def duration(unit: :seconds)
-    a = Date.today
-
-    # Only active sessions or ones that started yesterday or earlier will yield a duration
-    if !active || (started_at.year < a.year ||
-                   started_at.month < a.month ||
-                   started_at.day < a.day)
+    # inactive = sessions whose active attribute if false, OR ones that started yesterday or earlier will yield a duration
+    if !is_inactive?
+      nil
+    else
       if active
+        # The session ended without 
         duration = PaidSession.end_of_day - (started_at.hour * 3600 + started_at.min * 60 + started_at.sec)
       else
         duration = ended_at - started_at
       end
-    else
-      duration = 0
-    end
 
-    if duration == 0
-      nil
-    else
       if unit == :seconds
         duration
       else
@@ -30,8 +23,20 @@ class PaidSession < ActiveRecord::Base
     end
   end
 
+  def is_inactive?
+    a = Date.today
+    !active || (started_at.year < a.year ||
+                   started_at.month < a.month ||
+                   started_at.day < a.day)
+
+  end
+  
   def self.end_of_day
     # Official end of day has to be set
     Rails.application.secrets.end_of_day_24h.hour * 60 * 60
+  end
+
+  def session_cost
+    duration(unit: :seconds).to_i * Rails.application.secrets.session_price_per_second
   end
 end

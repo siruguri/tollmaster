@@ -29,7 +29,7 @@ set :log_level, :debug
 set :pty, false
 
 # Sidekiq
-set :sidekiq_options_per_process, ["--queue sms_messages --queue mailers"]
+set :sidekiq_options_per_process, ["--queue sms_messages --queue mailers --queue invoices"]
 set :sidekiq_monit_default_hooks, false
 
 # Default value for :linked_files is []

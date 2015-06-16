@@ -1,30 +1,18 @@
 class PrepareInvoicesJob < ActiveJob::Base
-  def perform
-    unpaid_sessions = PaidSession.where invoice_id: nil
-
-    us_by_user = unpaid_sessions.group_by { |sess| sess.user }
-
-    @durations = {}
-    us_by_user.each do |user, sessions|
-      # Add the sessions lengths for this user, that either didn't start today
-      # Or are inactive.
-      @durations[user.id] = sessions.inject({invoice_sum: 0.0, payable_sessions: []}) do |memo, sess|
-        if (i = sess.duration(unit: :seconds))
-          memo[:invoice_sum] += i
-          memo[:payable_sessions] << sess
-        end
-        memo
-      end
+  queue_as :invoices
+  
+  def perform(user)
+    if user == :all
+      # Prepare invoices for all users
+      unpaid_user_ids = PaidSession.where(invoice_id: nil).joins(:user).pluck('users.id').uniq
+    else
+      unpaid_user_ids = [ user.id ]
     end
 
-    # The durations decide the invoice amounts
-    ActiveRecord::Base.transaction do
-      @durations.select { |key, value| value[:invoice_sum] > 0 }.each do |user_id, payload|
-        i = Invoice.create(user_id: user_id, amount: payload[:invoice_sum], invoice_status: Invoice::InvoiceStatus::CREATED)
-        payload[:payable_sessions].each do |sess|
-          i.paid_sessions << sess
-        end
-      end
+    unpaid_user_ids.each do |user_id|
+      u = User.find(user_id)
+      u.make_invoices
+      InvoiceMailer.invoice_email(u).deliver_later
     end
   end
 end

@@ -4,8 +4,18 @@ paid_session_1:
   active: true
 complete_session_1:
   user: user_with_completed_sessions
-  started_at: <%= Time.new(2015, 01, 01) + 2.hours %>
-  ended_at: <%= Time.new(2015, 01, 01) + 3.hours + 15.minutes + 15.seconds %>
+  started_at: <%= Time.at(1420110000.0) %>
+  ended_at: <%= Time.at(1420110915.5) %> 
+  active: false
+complete_session_1.1:
+  user: user_with_completed_sessions
+  started_at: <%= Time.new(2015, 02, 01) + 2.hours %>
+  ended_at: <%= Time.new(2015, 02, 01) + (3.5).hours %>
+  active: false
+complete_session_1.2:
+  user: user_with_completed_sessions
+  started_at: <%= Time.new(2015, 03, 01) + 2.hours %>
+  ended_at: <%= Time.new(2015, 03, 01) + 3.hours + (15.5).minutes  %>
   active: false
 complete_session_2:
   user: user_with_completed_sessions_2

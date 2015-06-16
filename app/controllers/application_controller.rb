@@ -19,6 +19,18 @@ class ApplicationController < ActionController::Base
     go_back_or_root(error_message)
   end
 
+  protected
+  def require_link_secret
+    unless params[:link_secret] && (@secret_link = SecretLink.find_by_secret(params[:link_secret]))
+      redirect_to root_path, alert: 'Something went wrong. Please contact us if you think your link should have worked.'
+
+      return false
+    end
+
+    @user = @secret_link.user
+    true
+  end
+
   private
   def set_locale
     # 1. Let's make our app use the locale

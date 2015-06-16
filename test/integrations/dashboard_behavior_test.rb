@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class DashboardBehaviorTest < Capybara::Rails::TestCase
-  include Rack::Test::Methods
+  include ActiveJob::TestHelper
   self.use_transactional_fixtures = false
 
   before do
@@ -12,13 +12,12 @@ class DashboardBehaviorTest < Capybara::Rails::TestCase
     before do
       @user = users(:user_with_paid_session)
       visit dash_path(link_secret: @user.secret_link.secret)
-      ActionMailer::Base.deliveries.clear
     end
     
     it "can open door" do
-      click_button 'Open Door'
-      assert_not ActionMailer::Base.deliveries.empty?
+      click_button 'Open door'
       assert_match /door opened/i, page.body
+      assert_enqueued_jobs 1
     end
 
     it "can check out" do

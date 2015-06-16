@@ -4,11 +4,21 @@ TollMaster::Application.routes.draw do
 
   # Logins and Profiles
   devise_for :users
-  resources :users, path: 'profiles'
+  resources :users, path: 'profiles', except: [:new, :create, :edit, :show, :destroy, :update] do
+    collection do
+      post '/update' => :update
+    end
+  end
 
   root to: 'user_entry#show' # Change this to something else in your app.
-  post '/user_entry' => "user_entry#authenticate"
-  get '/user_entry/resend_sms' => "user_entry#resend_sms"
+
+  resource :user_entry, controller: :user_entry, except: [:new, :create, :edit, :update, :show, :destroy] do
+    member do
+      get :resend_sms
+      post :send_first_sms
+      post :authenticate
+    end
+  end
   
   # The rest of the routes file is specific to this app and you will have to manipulate it for your app. The 
   # 404 catchall route below always has to be at the end, if you intend to use it as designed in this app.

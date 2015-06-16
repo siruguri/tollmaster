@@ -4,7 +4,8 @@ class UserEntryControllerTest < ActionController::TestCase
   include ActiveJob::TestHelper
   test 'routing works' do
     assert_routing "/", {controller: 'user_entry', action: 'show'}
-    assert_routing({path: "/user_entry", method: :post}, {controller: 'user_entry', action: 'authenticate'})
+    assert_routing({path: "/user_entry/authenticate", method: :post}, {controller: 'user_entry', action: 'authenticate'})
+    assert_routing({path: "/user_entry/send_first_sms", method: :post}, {controller: 'user_entry', action: 'send_first_sms'})
     assert_routing('/user_entry/resend_sms', {controller: 'user_entry', action: 'resend_sms'})
   end
 
@@ -14,19 +15,22 @@ class UserEntryControllerTest < ActionController::TestCase
 
     get :resend_sms
     assert_redirected_to root_path
+
+    post :send_first_sms
+    assert_redirected_to root_path
   end
 
   test "show screen works" do
     get :show
-    assert assigns :publishable_stripe_key
     assert_template :show
+    assert_select '#entry-form', 1
   end
   
   describe "number with no known user" do
-    it "shows CC deets screen" do
+    it "welcomes to company" do
       post :authenticate, {primary_key: '9999999999'}
       assert_template :entry_bottom
-      assert_match /enter.*cc/i, response.body
+      assert_match /welcome.to/i, response.body
     end
   end
 

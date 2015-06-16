@@ -4,8 +4,9 @@
 .paragraph
   = t(:open_door_message)
 
-= form_tag('/user_entry', id: 'entry-form') do
-  = text_field_tag(:primary_key, '', class: 'form-control', id: 'primary-key', autofocus: true, placeholder: 'phone number')
+.paragraph#entry-form-paragraph
+  = form_tag('/user_entry/authenticate', id: 'entry-form') do
+    = text_field_tag(:primary_key, '', class: 'form-control', id: 'primary-key', autofocus: true, placeholder: 'phone number')
 
-  .form-row
-    = submit_tag 'Go!', class: 'btn btn-default', id: 'pk-submit'
+    .form-row
+      = submit_tag 'Go!', class: 'btn btn-default', id: 'pk-submit'

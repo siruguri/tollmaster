@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150601053303) do
+ActiveRecord::Schema.define(version: 20150615112200) do
 
   create_table "door_monitor_records", force: :cascade do |t|
     t.integer  "requestor_id"
@@ -21,10 +21,12 @@ ActiveRecord::Schema.define(version: 20150601053303) do
   end
 
   create_table "invoices", force: :cascade do |t|
-    t.integer  "user_id"
+    t.integer  "payer_id"
     t.float    "amount"
     t.integer  "invoice_status"
     t.datetime "pay_by"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "navbar_entries", force: :cascade do |t|
@@ -46,9 +48,11 @@ ActiveRecord::Schema.define(version: 20150601053303) do
   end
 
   create_table "payment_token_records", force: :cascade do |t|
-    t.integer "user_id"
-    t.string  "token_processor"
-    t.string  "token_value"
+    t.integer  "user_id"
+    t.string   "token_processor"
+    t.string   "token_value"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "payments", force: :cascade do |t|
@@ -56,6 +60,8 @@ ActiveRecord::Schema.define(version: 20150601053303) do
     t.integer  "amount"
     t.datetime "payment_date"
     t.string   "payment_for"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "secret_links", force: :cascade do |t|
@@ -66,7 +72,7 @@ ActiveRecord::Schema.define(version: 20150601053303) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string   "email",                  default: "", null: false
+    t.string   "email",                  default: ""
     t.string   "encrypted_password",     default: "", null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
@@ -85,9 +91,11 @@ ActiveRecord::Schema.define(version: 20150601053303) do
     t.datetime "confirmation_sent_at"
     t.string   "phone_number"
     t.boolean  "invalid_phone_number"
+    t.string   "first_name"
+    t.string   "last_name"
   end
 
-  add_index "users", ["email"], name: "index_users_on_email", unique: true
+  add_index "users", ["email"], name: "index_users_on_email"
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
 
 end

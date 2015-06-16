@@ -20,8 +20,8 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  site_title: "A Basic Rails App"
-  site_brand: 'Rails Skeleton'
+  site_title: "Door Entry App"
+  site_brand: 'Door Entry App'
   successful_resource_creation: "Resource successfully created"
   successful_resource_update: "Resource successfully updated"
   errors_found: "Errors found"
@@ -30,3 +30,4 @@ en:
   open_door_message: 'To open our door, please login using your cell phone number.'
   charge_details: 'You will be charged $.10 per minute while checked into our space. Minimum daily charge is $5 and maximum charge is $25. By using Nomad-A-What, you agree to our community rules and terms of use.'
   use_sms_directions_html: "You should have received an SMS message with a link to your dashboard. Please <a href='%{sms_resend_link}'>click here</a> to resend the SMS, or contact us if you are still having trouble."
+  company_name: "Nomad-a-What"

@@ -16,6 +16,16 @@ user_2:
   phone_number: 2125550000  
   <<: *DEFAULTS
 
+user_only_number:
+  phone_number: 2125551235
+  <<: *DEFAULTS
+
+user_with_name:
+  email: withname@valid.com
+  first_name: Bob
+  last_name: Bobola
+  <<: *DEFAULTS
+
 no_token:
   email: notoken@example.com
   phone_number: 2129990000
@@ -31,13 +41,13 @@ user_ptr_phonenumber:
   <<: *DEFAULTS
 
 has_secret_not_active:
-  email: hassecretnotactive@example.com
   phone_number: 3124445566
   <<: *DEFAULTS
 
 user_with_paid_session:
   email: paid_session@example.com
   phone_number: 4156689912
+  <<: *DEFAULTS
 
 user_with_valid_twilio_number:
   email: valid_twilio@example.com

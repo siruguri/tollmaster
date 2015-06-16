@@ -1,4 +1,6 @@
 class SecretLink < ActiveRecord::Base
+  # attr_reader :secret
+  
   belongs_to :user
 
   validates :user, presence: true

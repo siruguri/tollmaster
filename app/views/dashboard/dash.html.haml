@@ -2,16 +2,58 @@
   
 .paragraph
   = "Welcome, #{@user.displayable_greeting}"
-
-%div.my-hidden#link-secret{'data-value' => @user.secret_link.secret}
     
-- if @payment_option == :check_out
-  = form_tag '/dash/open', class: 'dash-action-form' do
-    %input.btn.btn-default{type: 'submit', value: 'Open Door'}
+= form_tag '/dash/open', class: 'dash-action-form' do
+  = hidden_field_tag 'link_secret', @user.secret_link.secret
+  %input#opendoor.btn.btn-default{type: 'submit', value: 'Open door', disabled: !@user.has_token?}
+
+- if @user.has_active_session?
   = form_tag '/dash/checkout', class: 'dash-action-form' do
+    = hidden_field_tag 'link_secret', @user.secret_link.secret
     %input.btn.btn-default{type: 'submit', value: 'Check out'}
-- elsif @payment_option == :check_in
+- else
   = form_tag '/dash/checkin', class: 'dash-action-form' do
-    %input.btn.btn-default{type: 'submit', value: 'Check in'}
+    = hidden_field_tag 'link_secret', @user.secret_link.secret
+    %input.btn.btn-default{type: 'submit', value: 'Check in', disabled: !@user.has_token?}
 
+- if !@user.has_token?
+  .section-divider
+  .paragraph
+    Please supply us a credit card to be able to check in and enter.
+  .hidden#publishable-key{'data-key-value' => ENV['STRIPE_PUBLISHABLE_KEY']}
 
+  = form_tag('/card_records', id: 'payments-form') do
+    = hidden_field_tag 'link_secret', @user.secret_link.secret
+    #payment-errors{style: 'display: none'}
+    = label_tag(:cc_number, 'CC #', class: 'form-control')
+    = text_field_tag :cc_number, '', {id: 'cc_number', class: 'form-control', "data-stripe" => "number", autofocus: true}
+    = label_tag(:cvc, 'CVC', class: 'form-control')
+    = text_field_tag :cvc, '', {class: 'form-control', id: 'cvc', "data-stripe" => "cvc"}
+    .row.form-row
+      .col-xs-6
+        = label_tag(:exp_month, 'Exp Month', class: 'form-control')
+      .col-xs-6
+        = label_tag(:exp_year, 'Exp Year', class: 'form-control')
+    .row
+      .col-xs-6
+        %input.form-control#exp_month{"data-stripe" => "exp-month"}
+      .col-xs-6
+        %input.form-control#exp_year{"data-stripe" => "exp-year"}
+
+    .form-row
+      = submit_tag 'Pay', class: 'btn btn-default', id: 'form-submit'
+
+- if @user.needs_name? or @user.needs_email?
+  .section-divider
+  .paragraph
+    Please update your profile, so we can send you receipts and also address you properly!
+  = form_tag '/profiles/update', id: 'profile-update-form' do
+    = hidden_field_tag 'link_secret', @user.secret_link.secret
+    - if @user.needs_email?
+      = label_tag(:email_address, 'Email', class: 'form-control')
+      = text_field_tag :email_address, '', {id: 'email_address', class: 'form-control'}
+    - if @user.needs_name?
+      = label_tag(:username, 'Name', class: 'form-control')
+      = text_field_tag :username, '', {id: 'username', class: 'form-control'}
+    .form-row
+      %input#profile-update-form-submit.btn.btn-default{type: 'submit', value: 'Update!'}

@@ -1,0 +1,25 @@
+= "Hi!, #{@user.displayable_greeting}"
+%p
+  
+= "Thanks for using #{t(:company_name)} Door Pass! These are your invoices for your sessions - the charges will appear on the credit card on record shortly."
+%p
+  %table{border: 1}
+    %th
+      Session Start
+    %th
+      Session Duration
+    %th
+      Session Cost
+    %th
+      Invoice Number
+    - @invoices.each do |invoice|
+      - invoice.paid_sessions.each do |ps|
+        %tr
+          %td
+            = ps.started_at
+          %td
+            = "#{sprintf("%d", ps.duration(unit: :seconds))} seconds"
+          %td
+            = "$#{sprintf("%0.2f", ps.session_cost)}"
+          %td
+            = invoice.id

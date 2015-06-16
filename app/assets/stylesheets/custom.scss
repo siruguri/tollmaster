@@ -65,6 +65,12 @@ body {
 
 .notice {
   padding: 5px;
-  background-color: #FFCC00;
+  background-color: $notice-background;
   margin-bottom: 10px;
+}
+
+.section-divider {
+  padding-bottom: 10px;
+  border-top: solid 1px $background-red;
+  margin-top: 5px;
 }

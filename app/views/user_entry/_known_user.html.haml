@@ -2,4 +2,4 @@
   Welcome back!
 
 .entry-message-body
-  = t(:use_sms_directions_html, sms_resend_link: user_entry_resend_sms_path(primary_key: @user.phone_number))
+  = t(:use_sms_directions_html, sms_resend_link: resend_sms_user_entry_path(primary_key: @user.phone_number))
