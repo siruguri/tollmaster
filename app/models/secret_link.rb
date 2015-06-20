@@ -1,5 +1,5 @@
 class SecretLink < ActiveRecord::Base
-  # attr_reader :secret
+  attr_reader :temporary_secret
   
   belongs_to :user
 
@@ -9,12 +9,17 @@ class SecretLink < ActiveRecord::Base
   # Secret links are only created, never created.
   after_create :sms_the_link
 
+  def self.find_by_encrypted_secret(password)
+    where(secret: Digest::SHA256.hexdigest(password)).first
+  end
+  
   private
   def create_random_secret
-    self.secret = SecureRandom.hex(12)
+    @temporary_secret = SecureRandom.hex(12)
+    self.secret = Digest::SHA256.hexdigest @temporary_secret
   end
 
   def sms_the_link
-    SmsJob.perform_later self.user
+    SmsJob.perform_later self, @temporary_secret
   end
 end

@@ -3,7 +3,7 @@ class SmsJob < ActiveJob::Base
   queue_as :sms_messages
   include Rails.application.routes.url_helpers
 
-  def perform(user)
+  def perform(link_obj, temp_secret)
     # the twilio integration goes here
     # put your own credentials here
     account_sid = Rails.application.secrets.twilio_account_sid
@@ -12,11 +12,12 @@ class SmsJob < ActiveJob::Base
     # set up a client to talk to the Twilio REST API
     @client = Twilio::REST::Client.new account_sid, auth_token
 
+    user = link_obj.user
     begin
       resp = @client.account.messages.create({
                                                from: Rails.application.secrets.twilio_account_phone,
                                                to: user.phone_number,
-                                               body: "Your Rockit Dashboard: #{url_for(controller: 'dashboard', action: 'dash', link_secret: user.secret_link.secret)}",
+                                               body: "Your #{I18n.t(:company_name)} Door Dashboard: #{url_for(controller: 'dashboard', action: 'dash', link_secret: temp_secret)}",
                                              })
     rescue Twilio::REST::RequestError => e
       user.invalid_phone_number!

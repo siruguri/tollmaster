@@ -3,7 +3,8 @@ require 'resque_web'
 TollMaster::Application.routes.draw do
 
   # Logins and Profiles
-  devise_for :users
+  devise_for :users, skip: [:registration]
+  
   resources :users, path: 'profiles', except: [:new, :create, :edit, :show, :destroy, :update] do
     collection do
       post '/update' => :update
@@ -25,12 +26,11 @@ TollMaster::Application.routes.draw do
 
   # Admin - these routes sould ideally be protected with a constraint
   require 'sidekiq/web'
-  # authenticate :admin, lambda { |u| u.is_a? Admin } do
-  mount Sidekiq::Web => '/sidekiq_ui'
-  # Adds RailsAdmin
-  mount RailsAdmin::Engine => '/rails_admin', as: 'rails_admin'
-
-  #end
+  authenticate :user, lambda { |u| u.admin? } do
+    mount Sidekiq::Web => '/sidekiq_ui'
+    # Adds RailsAdmin
+    mount RailsAdmin::Engine => '/rails_admin', as: 'rails_admin'
+  end
 
   get '/dash/:link_secret' => 'dashboard#dash', as: :dash
   post '/dash/open' => 'dashboard#open_sesame'

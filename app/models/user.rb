@@ -1,4 +1,6 @@
 class User < ActiveRecord::Base
+  attr_accessor :plain_secret
+  
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable, :confirmable,
@@ -6,10 +8,13 @@ class User < ActiveRecord::Base
 
   validates_uniqueness_of :phone_number, allow_nil: true
   has_many :paid_sessions
+  has_many :secret_links
+  
+  has_one :payment_token_record
   after_create :make_secret_link!
 
-  def secret_link
-    (s=SecretLink.joins(:user).where(user: self)).empty? ? nil : s.order(created_at: :desc).first
+  def valid_secret_link
+    secret_links.empty? ? nil : secret_links.order(created_at: :desc).first
   end
 
   def has_active_session?
@@ -29,24 +34,38 @@ class User < ActiveRecord::Base
     a=Date.today
     t=Time.new(a.year, a.month, a.day)
     
-    active_session = PaidSession.where(active: true, user_id: self.id).where('started_at > ?', t).first
-    if active_session
-      active_session.active = false
-      active_session.ended_at = Time.now
-      active_session.save
+    active_sessions = PaidSession.where(active: true, user_id: self.id).where('started_at > ?', t).all
+    succesful_inactivations = 0
+
+    if (orig_count = active_sessions.count) > 0
+      active_sessions.each do |session|
+        session.active = false
+        session.ended_at = Time.now
+        session.save
+        succesful_inactivations += 1
+      end
     end
 
-    if !active_session or !active_session.persisted?
+    if succesful_inactivations != orig_count
       false
     else
       true
     end
   end
 
+  def username
+    # Allows for checking that username in form becomes the right username in the model
+    if (first_name and first_name.strip.length > 0) or (last_name and last_name.strip.length > 0)
+      (first_name.strip.length > 0 ? "#{first_name} " : "") + last_name
+    else
+      nil
+    end
+  end
+  
   def displayable_greeting
     ret = nil
-    if (first_name and first_name.strip.length > 0) or (last_name and last_name.strip.length > 0)
-      ret = (first_name.strip.length > 0 ? "#{first_name} " : "") + last_name
+    if username
+      username
     elsif phone_number && phone_number.length > 0
       ret = phone_number
     else # Devise guarantees email exists and is non-blank
@@ -83,7 +102,15 @@ class User < ActiveRecord::Base
     s.user = self
     s.save!
 
-    s.persisted?
+    s
+  end
+
+  def reset_link!
+    s=SecretLink.new
+    s.user = self
+    s.save!
+
+    s
   end
 
   def has_token?
@@ -96,5 +123,21 @@ class User < ActiveRecord::Base
 
   def needs_email?
     email.blank?
+  end
+
+  def save_split_email!(form_name)
+    # Allow user models to save names from form
+    form_name = form_name.strip
+    if form_name.length > 0
+      if /\s/.match(form_name)
+        matches = /^(.+)\s([^\s]+)$/.match(form_name)
+        self.first_name = matches[1]
+        self.last_name = matches[2]
+      else
+        self.first_name = form_name
+      end
+
+      self.save
+    end
   end
 end

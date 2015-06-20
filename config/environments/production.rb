@@ -80,7 +80,7 @@ TollMaster::Application.configure do
   config.log_formatter = ::Logger::Formatter.new
   config.action_mailer.default_url_options = { :host => '107.170.193.44', port: 80 }
   config.action_mailer.smtp_settings = {
-      :address        => 'smtp.mandrilapp.com',
+      :address        => 'smtp.mandrillapp.com',
       :port           => '587',
       :authentication => :plain,
       :user_name      => ENV['MANDRILL_USERNAME'],

@@ -22,7 +22,7 @@ class UserEntryController < ApplicationController
     else
       begin
         v = User.new(phone_number: params[:primary_key])
-        v.password = Devise.bcrypt(User, 'password')
+        v.password = Devise::Encryptor.digest(User, 'password')
         v.skip_confirmation!
 
         v.save!
@@ -40,7 +40,8 @@ class UserEntryController < ApplicationController
     @user = User.find_by_phone_number(params[:primary_key])
 
     if @user
-      SmsJob.perform_later(@user)
+      new_link = @user.reset_link!
+      SmsJob.perform_later(new_link, new_link.temporary_secret)
     end
   end
   

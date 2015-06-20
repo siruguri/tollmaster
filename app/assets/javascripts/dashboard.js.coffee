@@ -21,6 +21,14 @@ $(document).ready ->
        form.get(0).submit()
     null
 
+  is_blank = (node) ->
+    node.val().trim().length == 0
+
+  is_not_email = (node) ->
+    # for now, we'll just check that it's non zero and has an @
+    v = node.val().trim()
+    v.size > 0 && v.match(/@/)
+
   is_numeric = (node) ->
     node.val().trim().match(/^\d+$/)
 
@@ -28,13 +36,24 @@ $(document).ready ->
     node.val().trim().length == length
 
   form_is_valid = (j_form) ->
-    is_numeric(j_form.find('input#cc_number')) && is_numeric(j_form.find('input#cvc')) && \
+    cond1 = true
+    if (j_form.find('#email_address').length > 0)
+      if is_not_email(j_form.find('#email_address'))
+        cond1 = false
+
+    if j_form.find('#username').length > 0
+      if is_blank(j_form.find('#username'))
+        cond1 = false
+
+    cond2 = is_numeric(j_form.find('input#cc_number')) && is_numeric(j_form.find('input#cvc')) && \
       is_numeric(j_form.find('input#exp_month')) && is_numeric(j_form.find('input#exp_year')) && \
       (has_length(j_form.find('input#exp_year'), 2) || has_length(j_form.find('input#exp_year'), 4))\
       && has_length(j_form.find('input#exp_month'), 2) 
 
+    cond1 && cond2
+
   post_form_load = ->
-    for id in ['#primary-key', '#cc_number', '#cvc', '#exp_month', '#exp_year']
+    for id in ['#username', '#email_address', '#primary-key', '#cc_number', '#cvc', '#exp_month', '#exp_year']
       $('input' + id).focus (evt) ->
         $('#payment-errors').text('').hide()
         $('.error-box').text('').hide()
@@ -50,7 +69,7 @@ $(document).ready ->
       Stripe.card.createToken(form, stripeResponseHandler)
       # Prevent the form from submitting with the default action
     else
-      $('#payment-errors').text('One of your inputs is incorrect. Please re-check your form.').show()
+      $('#payment-errors').text('One of your inputs is missing or incorrect. Please re-check your form.').fadeIn(400)
 
     false
 

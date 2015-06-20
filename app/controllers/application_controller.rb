@@ -21,13 +21,14 @@ class ApplicationController < ActionController::Base
 
   protected
   def require_link_secret
-    unless params[:link_secret] && (@secret_link = SecretLink.find_by_secret(params[:link_secret]))
+    unless params[:link_secret] && (@secret_link = SecretLink.find_by_encrypted_secret(params[:link_secret]))
       redirect_to root_path, alert: 'Something went wrong. Please contact us if you think your link should have worked.'
 
       return false
     end
 
     @user = @secret_link.user
+    @user.plain_secret = params[:link_secret]
     true
   end
 

@@ -91,3 +91,7 @@ input:focus, textarea:focus {
     -moz-osx-font-smoothing: grayscale;
 }
 
+label.form-control {
+  border: initial;
+  background-color: initial;
+}

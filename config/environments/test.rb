@@ -38,7 +38,7 @@ TollMaster::Application.configure do
   config.active_support.deprecation = :stderr
 
   # Added per deprecation warning in 4.2
-  config.active_support.test_order = :sorted
+  config.active_support.test_order = :random
 
   Rails.application.default_url_options.merge!({host: Rails.application.secrets.default_host, port: '80'})
 end

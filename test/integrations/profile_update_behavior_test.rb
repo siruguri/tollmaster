@@ -5,7 +5,7 @@ class ProfileUpdateBehaviorTest < Capybara::Rails::TestCase
 
   def setup
     Capybara.default_driver = :selenium
-    visit dash_path(link_secret: users(:user_only_number).secret_link.secret)
+    visit dash_path(link_secret: 'only_number_secret')
   end
 
   test "email and name update boxes are shown" do

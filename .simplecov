@@ -11,6 +11,7 @@ unless defined?(Spring)
 
     add_group 'API', 'app/api_engine'
 
+    coverage_dir 'simplecov_coverage'
     minimum_coverage 95
   end
 

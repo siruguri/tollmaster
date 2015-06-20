@@ -7,7 +7,7 @@ class SmsJobTest < ActiveSupport::TestCase
   
   test 'valid number does not raise exceptions' do
     assert_nothing_raised do
-      SmsJob.new(users(:user_with_valid_twilio_number)).perform_now
+      SmsJob.new(users(:user_with_valid_twilio_number).valid_secret_link, 'dummy').perform_now
     end
   end
 
@@ -15,7 +15,7 @@ class SmsJobTest < ActiveSupport::TestCase
     u = users(:user_with_invalid_twilio_number)
     u.invalid_phone_number = false
     u.save
-    SmsJob.new(users(:user_with_invalid_twilio_number)).perform_now
+    SmsJob.new(users(:user_with_invalid_twilio_number).valid_secret_link, 'dummy').perform_now
 
     u = users(:user_with_invalid_twilio_number)
     assert u.invalid_phone_number

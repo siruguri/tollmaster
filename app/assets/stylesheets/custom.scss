@@ -64,7 +64,7 @@ body {
 }
 
 .notice {
-  padding: 5px;
+  padding: 10px;
   background-color: $notice-background;
   margin-bottom: 10px;
 }
@@ -73,4 +73,10 @@ body {
   padding-bottom: 10px;
   border-top: solid 1px $background-red;
   margin-top: 5px;
+}
+
+#payment-errors {
+  background-color: $background-red;
+  padding: 10px 5px;
+  margin-top: 10px;
 }

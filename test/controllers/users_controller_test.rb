@@ -10,7 +10,7 @@ class UsersControllerTest < ActionController::TestCase
   end
   
   test 'update with email and first/last name' do
-    post :update, {email_address: 'test@test.com', username: 'first last', link_secret: @u.secret_link.secret}
+    post :update, {email_address: 'test@test.com', username: 'first last', link_secret: 'only_number_secret'}
     assert assigns(:user)
 
     v = User.find(@u.id)
@@ -21,7 +21,7 @@ class UsersControllerTest < ActionController::TestCase
   end
   
   test 'update with email and only one name' do
-    post :update, {email_address: 'test@test.com', username: 'first', link_secret: @u.secret_link.secret}
+    post :update, {email_address: 'test@test.com', username: 'first', link_secret: 'only_number_secret'}
     assert assigns(:user)
 
     v = User.find(@u.id)
@@ -32,7 +32,7 @@ class UsersControllerTest < ActionController::TestCase
   end
 
   test 'update with email and only one name' do
-    post :update, {email_address: 'test@test.com', link_secret: @u.secret_link.secret}
+    post :update, {email_address: 'test@test.com', link_secret: 'only_number_secret'}
     assert_equal 1, response_json['update_ids'].size
   end
   

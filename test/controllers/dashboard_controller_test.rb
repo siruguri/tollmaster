@@ -4,6 +4,8 @@ class DashboardControllerTest < ActionController::TestCase
   include ActiveJob::TestHelper
   def setup
     @inactive_user = users(:has_secret_not_active)
+
+    set_net_stubs
   end
   
   test 'routing works' do
@@ -25,7 +27,7 @@ class DashboardControllerTest < ActionController::TestCase
   describe 'user with email address' do
     before do
       @email_user = users :user_with_name
-      get :dash, {link_secret: @email_user.secret_link.secret}
+      get :dash, {link_secret: 'user_with_name_secret'}
     end
 
     it 'finds user and asks for name' do
@@ -38,17 +40,15 @@ class DashboardControllerTest < ActionController::TestCase
   describe 'good secret link' do
     before do
       @inactive_user = users(:has_secret_not_active)
-      get :dash, {link_secret: @inactive_user.secret_link.secret}
+      get :dash, {link_secret: 'has_secret_not_active_secret'}
     end
 
     it 'finds user and asks for name' do
       assert_template :dash
       assert assigns(:user)
-      assert_match /check.*in/i, response.body
 
-      assert_select('input#opendoor') do |elt|
-        assert_equal 'disabled', elt.attr('disabled').value
-      end
+      assert_no_match /check.out/i, response.body
+      assert_match /check.*in.*door/i, response.body
 
       assert_select('input#email_address', 1)
     end
@@ -56,33 +56,33 @@ class DashboardControllerTest < ActionController::TestCase
     it 'allows user to check in with payment record' do
       PaymentTokenRecord.create(user: @inactive_user, token_processor: 'stripe', token_value: "atoken")
       assert_difference('PaidSession.count', 1) do
-        post :checkin, {link_secret: @inactive_user.secret_link.secret}
+        post :checkin, {link_secret: 'has_secret_not_active_secret'}
       end
 
-      assert_redirected_to '/dash/' + @inactive_user.secret_link.secret
+      assert_redirected_to '/dash/has_secret_not_active_secret'
     end
 
     it 'fails gracefully for checkin, without payment record' do
       assert_no_difference('PaidSession.count') do
-        post :checkin, {link_secret: @inactive_user.secret_link.secret}
+        post :checkin, {link_secret: 'has_secret_not_active_secret'}
       end
 
-      assert_redirected_to '/dash/' + @inactive_user.secret_link.secret
+      assert_redirected_to '/dash/has_secret_not_active_secret'
       assert_match /couldn.t find/i, flash[:alert]
     end
 
     it 'fails gracefully for checkout, without payment record' do
-        post :checkout, {link_secret: @inactive_user.secret_link.secret}
-        assert_redirected_to '/dash/' + @inactive_user.secret_link.secret
+        post :checkout, {link_secret: 'has_secret_not_active_secret'}
+        assert_redirected_to '/dash/has_secret_not_active_secret'
     end
     
-    it 'does not allow opening the door' do
+    it 'does not allow inactive users to open the door' do
       assert_no_difference('DoorMonitorRecord.count', 1) do
-        post :open_sesame, {link_secret: @inactive_user.secret_link.secret}
+        post :open_sesame, {link_secret: 'has_secret_not_active_secret'}
       end
 
-      assert_redirected_to '/dash/' + @inactive_user.secret_link.secret
-      assert_match /error/, flash[:alert]
+      assert_redirected_to '/dash/has_secret_not_active_secret'
+      assert_match /check.in.first/i, flash[:alert]
     end
   end
 
@@ -93,9 +93,12 @@ class DashboardControllerTest < ActionController::TestCase
     
     PaidSession.create(user: @inactive_user, started_at: t, active: true)
     Time.stubs(:now).returns(t_later)
-    get :dash, {link_secret: @inactive_user.secret_link.secret}
+    get :dash, {link_secret: 'has_secret_not_active_secret'}
 
+    assert_match /open.*door/i, response.body
     assert_match /check.*out/i, response.body
+    assert_no_match /check.*in.*door/i, response.body
+    
     Time.unstub(:now)
   end
 
@@ -107,27 +110,28 @@ class DashboardControllerTest < ActionController::TestCase
     it 'can open door' do
       initial_count = DoorMonitorRecord.count
       assert_enqueued_jobs 0
-      post :open_sesame, {link_secret: @paid_user.secret_link.secret}
-      assert_redirected_to '/dash/' + @paid_user.secret_link.secret
-      
+      post :open_sesame, {link_secret: 'user_with_paid_session_secret'}
+
+      assert_redirected_to '/dash/user_with_paid_session_secret'
       assert_equal initial_count + 1, DoorMonitorRecord.count
+      assert_match /be open/i, flash[:notice]
       
       rec = DoorMonitorRecord.last
 
       assert_equal @paid_user, rec.requestor
       assert_equal true, rec.door_response
-      #      assert_not ActionMailer::Base.deliveries.empty?
+
       assert_enqueued_jobs 1
     end
 
     it 'sees error when door genie fails' do
       DoorGenie.stubs(:open_door).returns false
       assert_difference('DoorMonitorRecord.count', 1) do
-        post :open_sesame, {link_secret: @paid_user.secret_link.secret}
+        post :open_sesame, {link_secret: 'user_with_paid_session_secret'}
       end
 
-      assert_redirected_to '/dash/' + @paid_user.secret_link.secret      
-      assert_match /error/, flash[:alert]
+      assert_redirected_to '/dash/user_with_paid_session_secret'
+      assert_match /try.again/i, flash[:alert]
 
       DoorGenie.unstub(:open_door)
     end
@@ -140,19 +144,16 @@ class DashboardControllerTest < ActionController::TestCase
 
       Time.stubs(:now).returns(p.first.started_at + 42.seconds)
       assert_enqueued_with(job: PrepareInvoicesJob) do
-        post :checkout, {link_secret: @paid_user.secret_link.secret}
+        post :checkout, {link_secret: 'user_with_paid_session_secret'}
       end
       Time.unstub(:now)
 
-      assert_redirected_to '/dash/' + @paid_user.secret_link.secret
+      assert_redirected_to '/dash/user_with_paid_session_secret'
+      assert_match(/ out/, flash[:notice])
       assert_not @paid_user.has_active_session?
 
       p = PaidSession.where(user: @paid_user)
       assert_equal 42, p.first.duration(unit: :seconds)
-    end
-
-    it 'will receive an invoice' do
-      post :checkout, {link_secret: @paid_user.secret_link.secret}
     end
   end
 
@@ -161,7 +162,7 @@ class DashboardControllerTest < ActionController::TestCase
       @checking_out_user = users(:user_with_paid_session)
 
       assert @checking_out_user.has_active_session?
-      post :checkout, {link_secret: @checking_out_user.secret_link.secret}
+      post :checkout, {link_secret: 'user_with_paid_session_secret'}
 
       assert_not @checking_out_user.has_active_session?
     end

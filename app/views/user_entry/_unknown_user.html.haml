@@ -1,5 +1,5 @@
 .bottom-title.paragraph
-  Welcome to RockIT! We do not have your number on file. To get started, we'll need to send you a private link to the number you entered.
+  = "Welcome to #{t(:company_name)}! We do not have your number on file. To get started, we'll need to send you a private link to the number you entered."
 .paragraph
   = form_tag '/user_entry/send_first_sms', id: 'send-first-sms-form' do
     %input#first-sms-submit.btn.btn-default{type: 'submit', value: 'Send SMS'}

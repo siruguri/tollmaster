@@ -16,7 +16,9 @@ class PrepareInvoicesJobTest < ActiveSupport::TestCase
     u = users(:user_with_completed_sessions_2)
     PrepareInvoicesJob.perform_now u
 
-    assert_equal u.email, enqueued_jobs[0][:args][3].email
+    # This cannot possible be the best way to test this, given it's deep knowledge of how
+    # GlobalID works. :(
+    assert_equal u.email, GlobalID::Locator.locate(enqueued_jobs[0][:args][3]['_aj_globalid']).email
     assert_equal 1, Invoice.count
     assert_equal users(:user_with_completed_sessions_2), Invoice.first.payer
   end

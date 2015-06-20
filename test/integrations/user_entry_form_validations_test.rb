@@ -17,7 +17,7 @@ class UserEntryFormValidationsTest < Capybara::Rails::TestCase
   test "Second steps: unknown user" do
     fill_in 'primary-key', with: '9999999999'
     find('#pk-submit').click
-    q = find('#primary-key')
+    q = find('#entry-form-paragraph')
     assert_match /welcome.*number/i, body
 
     find('#first-sms-submit').click

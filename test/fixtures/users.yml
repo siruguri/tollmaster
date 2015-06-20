@@ -5,7 +5,7 @@
 # below each fixture, per the syntax in the comments below
 
 DEFAULTS: &DEFAULTS
-  encrypted_password: <%= Devise.bcrypt(User, 'password') %>
+  encrypted_password: <%= Devise::Encryptor.digest(User, 'password') %>
   confirmed_at: <%= Time.now.utc %>
   
 user_1:
