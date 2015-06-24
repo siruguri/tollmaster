@@ -4,6 +4,7 @@ TollMaster::Application.routes.draw do
 
   # Logins and Profiles
   devise_for :users, skip: [:registration]
+  get '/rails_admin/users/sign_in' => redirect('/users/sign_in')
   
   resources :users, path: 'profiles', except: [:new, :create, :edit, :show, :destroy, :update] do
     collection do

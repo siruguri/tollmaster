@@ -1,7 +1,6 @@
 RailsAdmin.config do |config|
   # Configure this
-  # config.included_models = ["FreeTextQuestion", "MultipleChoiceQuestion", "FormStructure", "FormStructureEntry"]
-  
+  config.included_models = ["User", 'PaymentTokenRecord']
   ### Popular gems integration
 
   # == Devise ==
@@ -9,10 +8,7 @@ RailsAdmin.config do |config|
     warden.authenticate! scope: :user
   end
   config.current_user_method(&:current_user)
-
-  ## == Cancan ==
-  config.authorize_with :cancan
-
+  
   ## == PaperTrail ==
   # config.audit_with :paper_trail, 'User', 'PaperTrail::Version' # PaperTrail >= 3.0.0
 
@@ -35,24 +31,16 @@ RailsAdmin.config do |config|
   end
 
   # Configure some of this too.
-  config.model 'Task' do
+  config.model 'User' do
     object_label_method do
-      :task_name
-    end
-
-    configure :category do
-      label 'Pick a category'
+      :phone_number
     end
 
     # This decides the appearance of the list of records
     list do
-      field :task_name do
-        label 'Task Titled As'
+      field :phone_number do
+        label 'Phone'
       end
     end
-  end
-
-  def task_name
-    self.name.capitalize
   end
 end
