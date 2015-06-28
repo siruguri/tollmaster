@@ -37,6 +37,7 @@ class PaidSession < ActiveRecord::Base
   end
 
   def session_cost
+    # Expects cost per second in cents
     duration(unit: :seconds).to_i * Rails.application.secrets.session_price_per_second
   end
 end
