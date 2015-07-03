@@ -9,7 +9,7 @@ class User < ActiveRecord::Base
   validates_uniqueness_of :phone_number, allow_nil: true
   has_many :paid_sessions
   has_many :secret_links
-  
+  has_many :invoices, foreign_key: 'payer_id'
   has_one :payment_token_record
   after_create :make_secret_link!
 
@@ -125,7 +125,7 @@ class User < ActiveRecord::Base
     email.blank?
   end
 
-  def save_split_email!(form_name)
+  def save_split_name!(form_name)
     # Allow user models to save names from form
     form_name = form_name.strip
     if form_name.length > 0

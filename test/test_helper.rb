@@ -20,4 +20,5 @@ end
 class ActionController::TestCase
   # Let controller test cases open files
   include FixtureFiles
+  include Devise::TestHelpers
 end

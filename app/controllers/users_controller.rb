@@ -1,6 +1,21 @@
 class UsersController < ApplicationController
-  before_action :require_link_secret
+  before_action :require_link_secret, only: [:update]
+  before_action :authenticate_admin!, except: [:update]
+  
+  def show_invoices
+    @user_invoices = Invoice.joins(:payer).where('invoice_status = ? and amount > ?', Invoice::InvoiceStatus::SENT_TO_PAYER,
+                                                 Rails.application.secrets.minimum_invoice_amount).group(:payer_id).sum(:amount)
 
+    @total = @user_invoices.inject(0) do |sum, amt|
+      sum += amt[1]
+    end
+  end
+
+  def charge_invoices
+    ChargeInvoicesJob.perform_later('all')
+    redirect_to show_invoices_users_path, notice: 'Charges sent to Stripe.'
+  end
+  
   def update
     updated = false
     update_ids = []

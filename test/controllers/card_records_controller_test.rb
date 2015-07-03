@@ -31,9 +31,9 @@ class CardRecordsControllerTest < ActionController::TestCase
       assert_redirected_to dash_path(link_secret: sl)
       assert_equal u, PaymentTokenRecord.last.user
 
-      changed_u = users(:has_secret_not_active)
-      assert_equal test_email, changed_u.email
-      assert_equal test_username, changed_u.username
+      u.reload
+      assert_equal test_email, u.email
+      assert_equal test_username, u.username
     end
 
     it "does not work for previously known token records for a new user" do

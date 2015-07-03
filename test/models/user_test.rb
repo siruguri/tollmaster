@@ -55,20 +55,20 @@ class UserTest < ActiveSupport::TestCase
     v = users(:user_2)
     clear_name v
 
-    v.save_split_email!('bob bobola')
+    v.save_split_name!('bob bobola')
     v = users(:user_2)
     assert_equal 'bob', v.first_name
     assert_equal 'bobola', v.last_name
 
     clear_name v
-    v.save_split_email!('bob')
+    v.save_split_name!('bob')
     v = users(:user_2)
 
     assert_equal 'bob', v.first_name
     assert_equal '', v.last_name
 
     clear_name v
-    v.save_split_email!('bob shob shobola')
+    v.save_split_name!('bob shob shobola')
     v = users(:user_2)
 
     assert_equal 'bob shob', v.first_name

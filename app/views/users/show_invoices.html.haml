@@ -1,0 +1,23 @@
+.form-element-row
+  Total outstanding amount: #{sprintf("$%0.2f", @total/100.0)}
+.form-element-row
+  = form_tag '/users/charge_invoices', method: :post do
+    = submit_tag 'Send out invoices', class: 'btn btn-default'
+
+%h1
+  Outstanding Invoices
+
+%table.table.table-striped.table-bordered
+  %thead
+    %tr
+      %th
+        User
+      %th
+        Amount
+  %tbody
+    - @user_invoices.each do |uid, amt|
+      %tr
+        %td
+          = User.find(uid).username
+        %td
+          = sprintf("$%0.2f", amt/100.0)

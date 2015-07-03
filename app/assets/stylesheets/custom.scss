@@ -2,7 +2,11 @@ body {
  height: auto;
  width: 100%;
  font-family: 'Cabin', sans-serif;
- font-size: 18px;
+ font-size: $base-font-size;
+}
+
+h1 {
+  font-size: 1.25 * $base-font-size;
 }
 
 .paragraph {

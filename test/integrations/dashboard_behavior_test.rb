@@ -28,5 +28,9 @@ class DashboardBehaviorTest < Capybara::Rails::TestCase
       assert_not @user.has_active_session?
     end
   end
+
+  after do
+    Capybara.default_driver = :rack_test
+  end    
 end
 

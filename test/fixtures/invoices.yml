@@ -1,9 +1,24 @@
 invoice_1:
   payer: user_1
-  amount: 4200
+  amount: 4242
+  invoice_status: <%= Invoice::InvoiceStatus::SENT_TO_PAYER %>
+
+invoice_11:
+  payer: user_1
+  amount: 1000
   invoice_status: <%= Invoice::InvoiceStatus::SENT_TO_PAYER %>
 
 invoice_2:
   payer: user_2
-  amount: 4100
+  amount: 4141
   invoice_status: <%= Invoice::InvoiceStatus::SENT_TO_PAYER %>
+
+invoice_withtoken:
+  payer: user_with_paid_session
+  amount: 4141
+  invoice_status: <%= Invoice::InvoiceStatus::SENT_TO_PAYER %>
+
+invoice_3:
+  payer: user_2
+  amount: 4141
+  invoice_status: <%= Invoice::InvoiceStatus::CREATED %>

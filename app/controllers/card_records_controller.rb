@@ -16,8 +16,11 @@ class CardRecordsController < ApplicationController
       # Existing token record.
       alert = t(:credit_card_duplicate)
     else
-      v.save_split_email! params[:username]
+      v.save_split_name! params[:username]
       v.email = params[:email_address]
+
+      # skip_confirmation! is done when the user has their first SMS sent
+      v.skip_reconfirmation!
       v.save!
       
       if !tok_rec.persisted? 

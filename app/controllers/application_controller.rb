@@ -7,7 +7,6 @@ class ApplicationController < ActionController::Base
     # Quite a few things to do before the app starts...
     I18n.locale = set_locale
     insert_default_param_filter
-    create_navbar_data
   end
 
   rescue_from ActionController::RoutingError do |exception|
@@ -47,15 +46,6 @@ class ApplicationController < ActionController::Base
     params[resource] &&= send(method, params[resource]) if respond_to?(method, true)
   end
 
-  def create_navbar_data
-    @navbar_entries = NavbarEntry.all.map do |entry|
-      if entry.user_id == -1 || Ability.new(current_user).can?(:read, entry)
-        {title: entry.title, url: entry.url }
-      end
-    end
-    @navbar_entries.compact!
-  end
-
   def go_back_or_root(message)
     if request.env.key? "HTTP_REFERER"
       redirect_to :back, :alert => message
@@ -65,7 +55,7 @@ class ApplicationController < ActionController::Base
   end 
 
   # Use URL options to set locale. I prefer it that way.
-  def default_url_options(options={})
+  def self.default_url_options(options={})
     { locale: I18n.locale }
   end
 end
