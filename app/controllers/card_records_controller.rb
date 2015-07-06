@@ -1,4 +1,3 @@
-
 class CardRecordsController < ApplicationController
   before_action :check_params, only: :create
   
@@ -16,7 +15,9 @@ class CardRecordsController < ApplicationController
       # Existing token record.
       alert = t(:credit_card_duplicate)
     else
-      v.save_split_name! params[:username]
+      if v.first_name.blank? and v.last_name.blank?
+        v.save_split_name params[:username]
+      end
       v.email = params[:email_address]
 
       # skip_confirmation! is done when the user has their first SMS sent
@@ -32,20 +33,19 @@ class CardRecordsController < ApplicationController
     redirect_to dash_path(link_secret: params[:link_secret]), notice: notice, alert: alert
   end
 
-  def show
-    @payment = Payment.find params[:id]
-  end
-
   private
   def check_params
-    if !(params[:email_address].blank?) and
-       !(params[:username].blank?) and
-       params[:link_secret] and params[:payment_token_record] and params[:payment_token_record][:token_value]
-      if !SecretLink.find_by_encrypted_secret(params[:link_secret]).nil?
+    if params[:link_secret] and
+      !(sl = SecretLink.find_by_encrypted_secret(params[:link_secret])).nil?
+      user = sl.user
+      if !(user.email.blank? and params[:email_address].blank?) and
+         !(user.first_name.blank? && user.last_name.blank? && params[:username].blank?) and
+         params[:payment_token_record] and params[:payment_token_record][:token_value]
         return true
       end
     end
-    
+
+    # No secret link
     render nothing: true, status: :bad_request
     return false
   end

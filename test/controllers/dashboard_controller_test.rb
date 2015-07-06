@@ -48,7 +48,7 @@ class DashboardControllerTest < ActionController::TestCase
       assert assigns(:user)
 
       assert_no_match /check.out/i, response.body
-      assert_match /check.*in.*door/i, response.body
+      assert_match /supply.*credit/i, response.body
 
       assert_select('input#email_address', 1)
     end
@@ -90,7 +90,8 @@ class DashboardControllerTest < ActionController::TestCase
     a=Date.today
     t=Time.new(a.year, a.month, a.day) + 2.hours
     t_later = Time.new(a.year, a.month, a.day) + 3.hours
-    
+
+    PaymentTokenRecord.create(user: @inactive_user, token_value: 'dummy', token_processor: 'stripex')
     PaidSession.create(user: @inactive_user, started_at: t, active: true)
     Time.stubs(:now).returns(t_later)
     get :dash, {link_secret: 'has_secret_not_active_secret'}

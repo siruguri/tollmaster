@@ -5,6 +5,8 @@ class ChargeInvoicesJobTest < ActiveSupport::TestCase
 
   def setup
     set_net_stubs
+    create_customer_id(:user_1)
+    create_customer_id(:user_with_paid_session)
   end
   
   test 'Can charge invoices for one user' do
@@ -13,7 +15,7 @@ class ChargeInvoicesJobTest < ActiveSupport::TestCase
     end
   end
 
-  test 'Can avoid users without tokens' do
+  test 'Can avoid users without customer ids' do
     assert_difference('Invoice.where(invoice_status: Invoice::InvoiceStatus::CHARGED).count', 0) do
       ChargeInvoicesJob.perform_now users(:user_2)
     end
@@ -25,4 +27,10 @@ class ChargeInvoicesJobTest < ActiveSupport::TestCase
     end
   end
 
+  private
+  def create_customer_id(uid)
+    p = users(uid).payment_token_record
+    p.customer_id = 'validcustomerid'
+    p.save!
+  end    
 end

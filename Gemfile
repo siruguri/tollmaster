@@ -91,6 +91,5 @@ group :test do
   gem 'webmock'
   gem 'minitest-spec-rails'
   gem 'minitest-rails-capybara'
-  gem 'capybara-webkit'
   gem 'database_cleaner'
 end

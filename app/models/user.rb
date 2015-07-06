@@ -125,7 +125,7 @@ class User < ActiveRecord::Base
     email.blank?
   end
 
-  def save_split_name!(form_name)
+  def save_split_name(form_name)
     # Allow user models to save names from form
     form_name = form_name.strip
     if form_name.length > 0
@@ -136,8 +136,14 @@ class User < ActiveRecord::Base
       else
         self.first_name = form_name
       end
+    end
+  end
 
-      self.save
+  def stripe_customer_id
+    if payment_token_record
+      payment_token_record.customer_id
+    else
+      nil
     end
   end
 end

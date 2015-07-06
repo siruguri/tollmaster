@@ -5,8 +5,9 @@ require 'simplecov'
 require 'rails/test_help'
 require 'mocha/mini_test'
 require 'webmock/minitest'
-
 require 'minitest/rails/capybara'
+require 'capybara'
+require 'capybara/rails'
 
 Dir[Rails.root.join('test/support/**/*.rb')].each { |f| require f }
 WebMock.disable_net_connect!(:allow_localhost => true)

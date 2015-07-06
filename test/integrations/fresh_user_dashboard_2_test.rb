@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class FreshUserDashboardTest < Capybara::Rails::TestCase
+class FreshUserDashboard2Test < Capybara::Rails::TestCase
   include Rack::Test::Methods
 
   self.use_transactional_fixtures = false
@@ -12,22 +12,26 @@ class FreshUserDashboardTest < Capybara::Rails::TestCase
     visit dash_path(link_secret: @secret)
   end
 
-  describe 'Good data is accepted' do
-    it 'works' do
+  describe 'Form filling errors' do
+    it "Rejects bad data" do
       valid_name
       valid_credit_card
-      find('#form-submit').click
       
-      page.find '#opendoor'
-      assert_match /\/dash\/.+/, page.current_path
-      v = SecretLink.find_by_encrypted_secret(@secret).user
-      assert_equal test_email, v.email
+      ['username', 'email_address'].each do |id|
+        assert_incorrect_input(id, '')
+      end          
+        
+      ['cc_number', 'cvc', 'exp_month', 'exp_year'].each do |id|
+        assert_incorrect_input(id, 'aa')
+      end
     end
-  end
 
-  describe "CC screen is shown" do
-    it "works" do
-      assert page.has_css?('#cc_number')
+    it 'Shows stripe_error messages' do
+      invalid_credit_card
+      find('#form-submit').click
+      find('#userdisplay')
+      
+      assert_operator page.find('#payment-errors').text.strip.size, :>, 0
     end
   end
   

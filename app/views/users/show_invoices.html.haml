@@ -1,7 +1,7 @@
 .form-element-row
   Total outstanding amount: #{sprintf("$%0.2f", @total/100.0)}
 .form-element-row
-  = form_tag '/users/charge_invoices', method: :post do
+  = form_tag '/profiles/charge_invoices', method: :post do
     = submit_tag 'Send out invoices', class: 'btn btn-default'
 
 %h1
@@ -21,3 +21,6 @@
           = User.find(uid).username
         %td
           = sprintf("$%0.2f", amt/100.0)
+- if current_admin
+  %p
+    = link_to('Logout Admin', destroy_admin_session_path, "data-method" => 'delete', class: 'btn btn-danger')

@@ -27,7 +27,7 @@ $(document).ready ->
   is_not_email = (node) ->
     # for now, we'll just check that it's non zero and has an @
     v = node.val().trim()
-    v.size > 0 && v.match(/@/)
+    v.size == 0 || !(v.match(/@/))
 
   is_numeric = (node) ->
     node.val().trim().match(/^\d+$/)
@@ -37,12 +37,10 @@ $(document).ready ->
 
   form_is_valid = (j_form) ->
     cond1 = true
-    if (j_form.find('#email_address').length > 0)
-      if is_not_email(j_form.find('#email_address'))
+    if (is_blank(j_form.find('#email_address')) || is_not_email(j_form.find('#email_address')))
         cond1 = false
 
-    if j_form.find('#username').length > 0
-      if is_blank(j_form.find('#username'))
+    if (is_blank(j_form.find('#username')))
         cond1 = false
 
     cond2 = is_numeric(j_form.find('input#cc_number')) && is_numeric(j_form.find('input#cvc')) && \
