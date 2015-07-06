@@ -38,6 +38,16 @@ class PaidSession < ActiveRecord::Base
 
   def session_cost
     # Expects cost per second in cents
-    duration(unit: :seconds).to_i * Rails.application.secrets.session_price_per_second
+    basecost = duration(unit: :seconds).to_i * Rails.application.secrets.session_price_per_second
+
+    if Rails.application.secrets.minimum_session_cost
+      basecost = [Rails.application.secrets.minimum_session_cost, basecost].max
+    end
+
+    if Rails.application.secrets.maximum_session_cost
+      basecost = [Rails.application.secrets.maximum_session_cost, basecost].min
+    end
+
+    basecost
   end
 end

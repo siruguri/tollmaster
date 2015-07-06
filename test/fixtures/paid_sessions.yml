@@ -17,6 +17,11 @@ complete_session_1.2:
   started_at: <%= Time.new(2015, 03, 01) + 2.hours %>
   ended_at: <%= Time.new(2015, 03, 01) + 3.hours + (15.5).minutes  %>
   active: false
+complete_session_1.3:
+  user: user_with_completed_sessions
+  started_at: <%= Time.new(2015, 03, 01) + 1.hours %>
+  ended_at: <%= Time.new(2015, 03, 01) + 1.hours + 1.minutes  %>
+  active: false
 complete_session_2:
   user: user_with_completed_sessions_2
   started_at: <%= Time.new(2015, 01, 01) + 2.hours %>

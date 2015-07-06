@@ -16,6 +16,6 @@ class InvoiceMailerTest < ActionMailer::TestCase
     assert_equal ['admin@rockitcolabs.com'], email.from
 
     assert_match /915\s+seconds/, email.body.raw_source
-    assert_match /\$457\.50/, email.body.raw_source
+    assert_match /\$2265\.00/, email.body.raw_source
   end
 end

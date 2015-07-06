@@ -28,7 +28,7 @@ class UserEntryControllerTest < ActionController::TestCase
   
   describe "number with no known user" do
     it "welcomes to company" do
-      post :authenticate, {primary_key: '9999999999'}
+      post :authenticate, {primary_key: '9991239999'}
       assert_template :entry_bottom
       assert_match /welcome.to/i, response.body
     end

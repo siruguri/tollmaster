@@ -25,4 +25,13 @@ class PrepareInvoicesJobTest < ActiveSupport::TestCase
     assert_equal initial_invoice_count + 1, Invoice.count
     assert_equal users(:user_with_completed_sessions_2), Invoice.last.payer
   end
+
+  test 'invoicing uses minimum and maximum cost' do
+    u = users(:user_with_completed_sessions)
+    PrepareInvoicesJob.perform_now u
+
+    i = Invoice.where(payer: u).first
+
+    assert_equal 576500, i.amount
+  end
 end
