@@ -7,10 +7,10 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable
 
   validates_uniqueness_of :phone_number, allow_nil: true
-  has_many :paid_sessions
-  has_many :secret_links
-  has_many :invoices, foreign_key: 'payer_id'
-  has_one :payment_token_record
+  has_many :paid_sessions, dependent: :destroy
+  has_many :secret_links, dependent: :destroy
+  has_many :invoices, foreign_key: 'payer_id', dependent: :destroy
+  has_one :payment_token_record, dependent: :destroy
   after_create :make_secret_link!
 
   def valid_secret_link
