@@ -1,6 +1,6 @@
 RailsAdmin.config do |config|
   # Configure this
-  config.included_models = ['Admin', "User", 'PaymentTokenRecord']
+  config.included_models = ['Admin', "User", 'PaymentTokenRecord', 'CmsConfig']
   ### Popular gems integration
 
   # == Devise ==

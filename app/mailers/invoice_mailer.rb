@@ -1,5 +1,9 @@
 class InvoiceMailer < ActionMailer::Base
-  default(from: "admin@rockitcolabs.com", subject: "Invoice for Rockit Door Pass")
+  include CmsConfigHelper
+  helper CmsConfigHelper
+  
+  default(from: config_or_locale(:company_admin_email_from),
+          subject: "Invoice for #{config_or_locale(:company_name)} Door Pass")
 
   def invoice_email(user)
     # Find all invoices paid by this user, that are in created state, and mail them.
@@ -20,7 +24,7 @@ class InvoiceMailer < ActionMailer::Base
 
     if update_success
       if user.email and user.email.strip.size > 0
-        mail(from: "admin@rockitcolabs.com", to: user.email)
+        mail(from: config_or_locale(:company_admin_email_from), to: user.email)
       end
     end
   end

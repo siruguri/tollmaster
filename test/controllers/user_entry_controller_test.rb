@@ -24,6 +24,16 @@ class UserEntryControllerTest < ActionController::TestCase
     get :show
     assert_template :show
     assert_select '#entry-form', 1
+
+    assert_match /will.be.charged/i, response.body
+
+    assert_select('a') do |elts|
+      found_link = false
+      elts.each do |elt|
+        found_link ||= /legal/.match(elt.attr('href'))
+      end
+      assert found_link
+    end
   end
   
   describe "number with no known user" do

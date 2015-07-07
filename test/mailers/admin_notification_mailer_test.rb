@@ -11,7 +11,7 @@ class AdminNotificationMailerTest < ActionMailer::TestCase
     assert_not ActionMailer::Base.deliveries.empty?
     email = ActionMailer::Base.deliveries.last
 
-    assert_equal ['admin@rockitcolabs.com'], email.from
+    assert_equal ['connect@nomadawhat.com'], email.from
     assert_equal 'siruguri@gmail.com', email.to[0]
   end
 end

@@ -2,7 +2,7 @@
 .error-box.my-hidden
 
 .paragraph
-  = t(:open_door_message)
+  = config_or_locale(:open_door_message)
 
 .paragraph#entry-form-paragraph
   = form_tag('/user_entry/authenticate', id: 'entry-form') do

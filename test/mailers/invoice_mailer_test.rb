@@ -13,8 +13,9 @@ class InvoiceMailerTest < ActionMailer::TestCase
     assert_not ActionMailer::Base.deliveries.empty?
     email = ActionMailer::Base.deliveries.last
 
-    assert_equal ['admin@rockitcolabs.com'], email.from
+    assert_match /nomadawhat/i, email.from[0]
 
+    assert_match /nomad.a.what/i, email.body.raw_source
     assert_match /915\s+seconds/, email.body.raw_source
     assert_match /\$2265\.00/, email.body.raw_source
   end

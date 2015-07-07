@@ -1,0 +1,11 @@
+config_1:
+  source_symbol: <%= :company_admin_email_from %>
+  target_text: connect@nomadawhat.com
+
+config_2:
+  source_symbol: <%= :company_name %>
+  target_text: Nomad-a-What
+
+config_3:
+  source_symbol: <%= :use_sms_directions_html %>
+  target_text: Nomad-a-What an sms <a href='%{sms_resend_link} '></a>

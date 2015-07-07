@@ -28,7 +28,6 @@ en:
   access_denied_message: "Please sign in to access that page."
   message_404: "You appear to want something that's not there."
   open_door_message: 'To open our door, please start by providing us your cell phone number. If you have already done this, your Door Dashboard is active at the link we sent you via SMS.'
-  charge_details: 'You will be charged $.10 per minute while checked into our space. Minimum daily charge is $5 and maximum charge is $25. By using Nomad-A-What, you agree to our community rules and terms of use.'
   use_sms_directions_html: "You should have received an SMS message with a link to your dashboard. Please <a href='%{sms_resend_link}'>click here</a> to resend the SMS, or contact us if you are still having trouble."
   company_name: "Nomad-A-What"
   footer_tos_text_html: "You will be charged $0.10 per minute while checked into our space. Minimum daily charge is $5 and maximum charge is $25. By using Nomad-A-What, you agree to our <a href='http://www.nomadawhat.com/legal'>community rules and terms of use</a>"
