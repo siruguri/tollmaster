@@ -1,8 +1,10 @@
 require 'test_helper'
+require 'pry-byebug'
 
 class ChargeInvoicesJobTest < ActiveSupport::TestCase
   include ActiveJob::TestHelper
-
+  self.use_transactional_fixtures = true
+  
   def setup
     set_net_stubs
     create_customer_id(:user_1)
@@ -27,6 +29,22 @@ class ChargeInvoicesJobTest < ActiveSupport::TestCase
     end
   end
 
+  test 'Handles errors in db saves' do
+    Invoice.any_instance.stubs(:wrapped_save!).raises(ActiveRecord::RecordInvalid, Invoice.new)
+    assert_difference('Invoice.where(invoice_status: Invoice::InvoiceStatus::ATTEMPT_CHARGE).count', 3) do
+      ChargeInvoicesJob.perform_now 'all'
+    end
+    Invoice.any_instance.unstub(:wrapped_save!)
+  end    
+
+  test 'Handles stripe card error' do
+    Stripe::Charge.stubs(:create).raises(Stripe::CardError.new('dummy message', nil, nil))
+    assert_difference('Invoice.where(invoice_status: Invoice::InvoiceStatus::CHARGE_FAILED).count', 3) do
+      ChargeInvoicesJob.perform_now 'all'
+    end
+    Stripe::Charge.unstub :create
+  end    
+  
   private
   def create_customer_id(uid)
     p = users(uid).payment_token_record

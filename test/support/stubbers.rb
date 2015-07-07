@@ -73,7 +73,7 @@ def valid_stripe_charge_object
 end
 
 def stripe_headers
-  {'Accept'=>'*/*; q=0.5, application/xml', 'Accept-Encoding'=>'gzip, deflate', 'Authorization'=>'Bearer sk_test_Uo801yD0z2zWiRLlg4kIBoyD', 'Content-Length'=>'56', 'Content-Type'=>'application/x-www-form-urlencoded', 'User-Agent'=>'Stripe/v1 RubyBindings/1.22.0', 'X-Stripe-Client-User-Agent'=>'{"bindings_version":"1.22.0","lang":"ruby","lang_version":"2.2.2 p95 (2015-04-13)","platform":"x86_64-darwin12.0","engine":"ruby","publisher":"stripe","uname":"Darwin localhost 12.5.0 Darwin Kernel Version 12.5.0: Sun Sep 29 13:33:47 PDT 2013; root:xnu-2050.48.12~1/RELEASE_X86_64 x86_64","hostname":"localhost"}'}
+  {'Accept'=>'*/*; q=0.5, application/xml'}
 end
 
 def customer_stub_response
@@ -89,11 +89,12 @@ end
 def set_net_stubs
   stub_request(:post, "https://api.stripe.com/v1/customers").
     with(:body => {"description"=>"Customer record for ", "source"=>"tok_uu_tok"},
-         :headers => stripe_headers).
+         headers: stripe_headers).
     to_return(:status => 200, :body => customer_stub_response, :headers => {})
 
   stub_request(:post, "https://api.stripe.com/v1/charges").
-    with(:body => hash_including({"amount"=>/^[\.\d]+$/, "currency"=>"usd", "description"=>/^\d+$/, "customer"=>/valid/})).
+    with(:body => hash_including({"amount"=>/^[\.\d]+$/, "currency"=>"usd", "description"=>/IDs\# \d+/, "customer"=>/valid/}),
+         headers: stripe_headers).
     to_return(:status => 200, :body => valid_stripe_charge_object)
   
   stub_request(:get, /reddit/).to_return(status: 200, body: 'stubbers stubbers stubbers stubbers stubbers')
