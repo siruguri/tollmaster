@@ -1,6 +1,6 @@
 paid_session_1:
   user: user_with_paid_session
-  started_at: <%= Time.now.utc %>
+  started_at: <%= Date.today + 10.hours %>
   active: true
 complete_session_1:
   user: user_with_completed_sessions

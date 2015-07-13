@@ -92,11 +92,6 @@ def set_net_stubs
          headers: stripe_headers).
     to_return(:status => 200, :body => customer_stub_response, :headers => {})
 
-  stub_request(:post, "https://api.stripe.com/v1/charges").
-    with(:body => hash_including({"amount"=>/^[\.\d]+$/, "currency"=>"usd", "description"=>/IDs\# \d+/, "customer"=>/valid/}),
-         headers: stripe_headers).
-    to_return(:status => 200, :body => valid_stripe_charge_object)
-  
   stub_request(:get, /reddit/).to_return(status: 200, body: 'stubbers stubbers stubbers stubbers stubbers')
   
   stub_request(:post, "https://#{ENV['TWILIO_TEST_ACCOUNT_SID']}:#{ENV['TWILIO_TEST_AUTH_TOKEN']}@api.twilio.com/2010-04-01/Accounts/#{ENV['TWILIO_TEST_ACCOUNT_SID']}/Messages.json").
@@ -109,4 +104,3 @@ def set_net_stubs
          :headers => {'Accept'=>'application/json', 'Accept-Charset'=>'utf-8', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded', 'User-Agent'=>'twilio-ruby/4.2.0 (ruby/x86_64-darwin12.0 2.2.2-p95)'}).
     to_return(:status => 400, :body => invalid_twilio_sms, :headers => {})
 end
-

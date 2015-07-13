@@ -2,6 +2,10 @@ require 'test_helper'
 
 class UserTest < ActiveSupport::TestCase
   include ActiveJob::TestHelper
+  include PhoneNumberManager
+  
+  self.use_transactional_fixtures = true
+  
   def setup
     set_net_stubs
   end
@@ -75,6 +79,29 @@ class UserTest < ActiveSupport::TestCase
 
   test '#stripe_customer_id' do
     assert_nil users(:user_2).stripe_customer_id
+  end
+
+  test 'phone number validation works' do
+    v = User.new
+    prev = User.create(phone_number: '4156664444')
+
+    v.set_phone_number canonicalize_number('+14156664444')
+    assert_not v.valid?
+
+    v.set_phone_number canonicalize_number('415-666-4444 ')
+    assert_not v.valid?
+
+    v.set_phone_number canonicalize_number(' 4156664444')
+    assert_not v.valid?
+  end
+
+  test 'phone number setting works' do
+    v = User.new
+    v.set_phone_number canonicalize_number('+0401234567890')
+    v.save
+
+    assert_equal '401234567890', v.phone_number, "#{v.phone_number} was not correct"
+    assert v.is_international?, "#{v.is_international} is not correct"
   end
 
   private

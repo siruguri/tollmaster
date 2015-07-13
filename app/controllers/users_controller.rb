@@ -3,8 +3,8 @@ class UsersController < ApplicationController
   before_action :authenticate_admin!, except: [:update]
   
   def show_invoices
-    @user_invoices = Invoice.joins(:payer).where('invoice_status = ? and amount > ?', Invoice::InvoiceStatus::SENT_TO_PAYER,
-                                                 Rails.application.secrets.minimum_invoice_amount).group(:payer_id).sum(:amount)
+    @user_invoices = Invoice.joins(:payer).where('invoice_status = ?', Invoice::InvoiceStatus::SENT_TO_PAYER).
+                     group(:payer_id).sum(:amount)
 
     @total = @user_invoices.inject(0) do |sum, amt|
       sum += amt[1]

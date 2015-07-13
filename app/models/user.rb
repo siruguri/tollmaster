@@ -6,7 +6,8 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable, :confirmable,
          :recoverable, :rememberable, :trackable
 
-  validates_uniqueness_of :phone_number, allow_nil: true
+  validates_uniqueness_of :phone_number, allow_nil: true, numericality: true
+  
   has_many :paid_sessions, dependent: :destroy
   has_many :secret_links, dependent: :destroy
   has_many :invoices, foreign_key: 'payer_id', dependent: :destroy
@@ -145,5 +146,10 @@ class User < ActiveRecord::Base
     else
       nil
     end
+  end
+
+  def set_phone_number(number_info)
+    self.is_international = number_info[:is_international]
+    self.phone_number = number_info[:number]
   end
 end

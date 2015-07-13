@@ -12,6 +12,11 @@ class ChargeInvoicesJobTest < ActiveSupport::TestCase
   end
   
   test 'Can charge invoices for one user' do
+    stub_request(:post, "https://api.stripe.com/v1/charges").
+      with(:body => hash_including({amount: '6542', "currency"=>"usd", "description"=>/IDs\# \d+/, "customer"=>/valid/}),
+           headers: stripe_headers).
+      to_return(:status => 200, :body => valid_stripe_charge_object)
+  
     assert_difference('Invoice.where(invoice_status: Invoice::InvoiceStatus::CHARGED).count', 2) do
       ChargeInvoicesJob.perform_now users(:user_1)
     end
@@ -24,12 +29,30 @@ class ChargeInvoicesJobTest < ActiveSupport::TestCase
   end
 
   test 'Can charge all valid users in one go' do
+    stub_request(:post, "https://api.stripe.com/v1/charges").
+      with(:body => hash_including({amount: '6542', "currency"=>"usd", "description"=>/IDs\# \d+/, "customer"=>/valid/}),
+           headers: stripe_headers).
+      to_return(:status => 200, :body => valid_stripe_charge_object)
+  
+    stub_request(:post, "https://api.stripe.com/v1/charges").
+      with(:body => hash_including({amount: '6500', "currency"=>"usd", "description"=>/IDs\# \d+/, "customer"=>/valid/}),
+           headers: stripe_headers).
+      to_return(:status => 200, :body => valid_stripe_charge_object)
+  
     assert_difference('Invoice.where(invoice_status: Invoice::InvoiceStatus::CHARGED).count', 3) do
       ChargeInvoicesJob.perform_now 'all'
     end
   end
 
   test 'Handles errors in db saves' do
+    stub_request(:post, "https://api.stripe.com/v1/charges").
+      with(:body => hash_including({amount: '6500', "currency"=>"usd", "description"=>/IDs\# \d+/, "customer"=>/valid/}),
+           headers: stripe_headers).
+      to_return(:status => 200, :body => valid_stripe_charge_object)
+    stub_request(:post, "https://api.stripe.com/v1/charges").
+      with(:body => hash_including({amount: '6542', "currency"=>"usd", "description"=>/IDs\# \d+/, "customer"=>/valid/}),
+           headers: stripe_headers).
+      to_return(:status => 200, :body => valid_stripe_charge_object)
     Invoice.any_instance.stubs(:wrapped_save!).raises(ActiveRecord::RecordInvalid, Invoice.new)
     assert_difference('Invoice.where(invoice_status: Invoice::InvoiceStatus::ATTEMPT_CHARGE).count', 3) do
       ChargeInvoicesJob.perform_now 'all'

@@ -49,7 +49,7 @@ class UsersControllerTest < ActionController::TestCase
       devise_sign_in(admins(:admin_1))
       get :show_invoices
       assert_template :show_invoices
-      assert_match /135.24/, response.body
+      assert_match /150.26/, response.body
 
       assert_select 'tr', 4
     end

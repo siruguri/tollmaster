@@ -2,6 +2,8 @@ require 'test_helper'
 
 class UserEntryControllerTest < ActionController::TestCase
   include ActiveJob::TestHelper
+  self.use_transactional_fixtures = true
+  
   test 'routing works' do
     assert_routing "/", {controller: 'user_entry', action: 'show'}
     assert_routing({path: "/user_entry/authenticate", method: :post}, {controller: 'user_entry', action: 'authenticate'})
@@ -63,4 +65,13 @@ class UserEntryControllerTest < ActionController::TestCase
       end
     end
   end
+
+  test "User with duplicate number cannot get first sms" do
+    assert_no_difference 'User.count' do
+      post :send_first_sms, {primary_key: "+1-#{users(:user_2).phone_number}"}
+    end
+    
+    assert_match /our.*system/i, flash[:notice]
+    assert_enqueued_jobs 0
+  end  
 end

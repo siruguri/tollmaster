@@ -8,10 +8,13 @@ class DashboardController < ApplicationController
   def open_sesame
     alert_mesg = notice_mesg = nil
     if @user.has_active_session?
-      if door_open_attempt
-        notice_mesg = I18n.t(:door_is_open)
-      else
+      status = door_open_attempt
+      if status == DoorGenie::DoorGenieStatus::OPENED
+        notice_mesg = config_or_locale(:door_is_open)
+      elsif status == DoorGenie::DoorGenieStatus::FAILED
         alert_mesg = 'Sorry, the door did not open. Please try again.'
+      elsif status == DoorGenie::DoorGenieStatus::AFTER_HOURS
+        notice_mesg = config_or_locale(:after_hours_message)
       end
     else
       alert_mesg = 'No active session. Maybe you want to check in first?'
@@ -55,17 +58,15 @@ class DashboardController < ApplicationController
   def door_open_attempt
     d = DoorMonitorRecord.new
     d.requestor = @user
-    ret = false
+    status = DoorGenie.open_door
     
-    if DoorGenie.open_door
-      d.door_response = true
+    d.door_response = status
+
+    if status == DoorGenie::DoorGenieStatus::OPENED
       DoorEntryMailer.admin_notification_email(@user).deliver_later
-      ret = true
-    else
-      d.door_response = false
     end
     d.save
 
-    ret
+    status
   end
 end

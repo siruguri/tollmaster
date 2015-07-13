@@ -47,6 +47,8 @@ has_secret_not_active:
 user_with_paid_session:
   email: paid_session@example.com
   phone_number: 4156689912
+  first_name: user with
+  last_name: paid session
   <<: *DEFAULTS
 
 user_with_valid_twilio_number:
@@ -60,6 +62,8 @@ user_with_invalid_twilio_number:
 user_with_completed_sessions:
   email: user_with_completed_sessions@example.com
   phone_number: 2123433011
+  first_name: user with
+  last_name: completed sessions
 
 user_with_completed_sessions_2:
   email: user_with_completed_sessions_2@example.com

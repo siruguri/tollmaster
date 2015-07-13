@@ -67,6 +67,10 @@ h1 {
   margin: 0 auto;
 }
 
+.half-width {
+  width: 50%;
+}
+
 .notice {
   padding: 10px;
   background-color: $notice-background;
@@ -83,4 +87,12 @@ h1 {
   background-color: $background-red;
   padding: 10px 5px;
   margin-top: 10px;
+}
+
+.small-font {
+  font-size: $base-font-size * 0.75;
+}
+
+.center-text {
+  text-align: center;
 }

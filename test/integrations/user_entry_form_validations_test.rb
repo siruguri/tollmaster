@@ -26,7 +26,7 @@ class UserEntryFormValidationsTest < Capybara::Rails::TestCase
     assert_match /received.an.sms/i, body
     assert_enqueued_jobs 1
   end
-
+  
   test "Known user shows SMS message" do
     fill_in 'primary-key', with: users(:user_2).phone_number
     find('#pk-submit').click

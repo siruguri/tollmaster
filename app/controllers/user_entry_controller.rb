@@ -1,12 +1,15 @@
 class UserEntryController < ApplicationController
-  before_action :check_params, except: :show
+  include PhoneNumberManager
 
+  before_action :check_params, except: :show
+  before_action :set_canonical_number, except: :show
+  
   def show
     @publishable_stripe_key = ENV['STRIPE_PUBLISHABLE_KEY']
   end
 
   def authenticate
-    if(@user = User.find_by_phone_number(params[:primary_key]))
+    if(@user = User.find_by_phone_number @canonical_number[:number])
       @partial_name = 'known_user'
     else
       @partial_name = 'unknown_user'
@@ -17,11 +20,15 @@ class UserEntryController < ApplicationController
 
   def send_first_sms
     notice = alert = nil
-    if User.find_by_phone_number params[:primary_key]
-      notice = 'That number is already in our system.'
+
+    if User.find_by_phone_number @canonical_number[:number]
+      notice = config_or_locale :youre_in_our_system
     else
       begin
-        v = User.new(phone_number: params[:primary_key])
+        v = User.new
+
+        # Take care of possible duplicates
+        v.set_phone_number @canonical_number
         v.password = Devise::Encryptor.digest(User, 'password')
         v.skip_confirmation!
 
@@ -53,5 +60,9 @@ class UserEntryController < ApplicationController
     end
 
     true
+  end
+
+  def set_canonical_number
+    @canonical_number = canonicalize_number params[:primary_key]
   end
 end

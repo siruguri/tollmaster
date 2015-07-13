@@ -2,6 +2,8 @@ require 'test_helper'
 
 class DashboardControllerTest < ActionController::TestCase
   include ActiveJob::TestHelper
+  self.use_transactional_fixtures = true
+  
   def setup
     @inactive_user = users(:has_secret_not_active)
 
@@ -77,7 +79,7 @@ class DashboardControllerTest < ActionController::TestCase
     end
     
     it 'does not allow inactive users to open the door' do
-      assert_no_difference('DoorMonitorRecord.count', 1) do
+      assert_no_difference 'DoorMonitorRecord.count' do
         post :open_sesame, {link_secret: 'has_secret_not_active_secret'}
       end
 
@@ -88,8 +90,8 @@ class DashboardControllerTest < ActionController::TestCase
 
   test 'good link with active session that started earlier today' do
     a=Date.today
-    t=Time.new(a.year, a.month, a.day) + 2.hours
-    t_later = Time.new(a.year, a.month, a.day) + 3.hours
+    t=Time.new(a.year, a.month, a.day) + 12.hours
+    t_later = Time.new(a.year, a.month, a.day) + 13.hours
 
     PaymentTokenRecord.create(user: @inactive_user, token_value: 'dummy', token_processor: 'stripex')
     PaidSession.create(user: @inactive_user, started_at: t, active: true)
@@ -102,15 +104,40 @@ class DashboardControllerTest < ActionController::TestCase
     
     Time.unstub(:now)
   end
-
+  
   describe 'user with valid link and paid session' do
     before do
       @paid_user = users(:user_with_paid_session)
     end
 
+    it 'cannot open door after hours' do
+      a=Date.today
+      t=Time.new(a.year, a.month, a.day) + 12.hours
+      t_later = Time.new(a.year, a.month, a.day) + 23.hours
+
+      Time.stubs(:now).returns(t_later)
+
+      assert_difference('DoorMonitorRecord.count', 1) do 
+        post :open_sesame, {link_secret: 'user_with_paid_session_secret'}
+      end
+
+      rec = DoorMonitorRecord.last
+      assert_redirected_to '/dash/user_with_paid_session_secret'
+      assert_enqueued_jobs 0
+      
+      assert_equal DoorGenie::DoorGenieStatus::AFTER_HOURS, rec.door_response
+      assert_match /opened.*between/i, flash[:notice]
+      Time.unstub :now
+    end
+    
     it 'can open door' do
       initial_count = DoorMonitorRecord.count
       assert_enqueued_jobs 0
+
+      a = Date.today
+      t_later = Time.new(a.year, a.month, a.day) + 12.hours
+
+      Time.stubs(:now).returns(t_later)
       post :open_sesame, {link_secret: 'user_with_paid_session_secret'}
 
       assert_redirected_to '/dash/user_with_paid_session_secret'
@@ -120,13 +147,15 @@ class DashboardControllerTest < ActionController::TestCase
       rec = DoorMonitorRecord.last
 
       assert_equal @paid_user, rec.requestor
-      assert_equal true, rec.door_response
+      assert_equal DoorGenie::DoorGenieStatus::OPENED, rec.door_response
 
       assert_enqueued_jobs 1
+
+      Time.unstub :now
     end
 
     it 'sees error when door genie fails' do
-      DoorGenie.stubs(:open_door).returns false
+      DoorGenie.stubs(:open_door).returns DoorGenie::DoorGenieStatus::FAILED
       assert_difference('DoorMonitorRecord.count', 1) do
         post :open_sesame, {link_secret: 'user_with_paid_session_secret'}
       end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150707163843) do
+ActiveRecord::Schema.define(version: 20150713214833) do
 
   create_table "admins", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
@@ -38,7 +38,7 @@ ActiveRecord::Schema.define(version: 20150707163843) do
 
   create_table "door_monitor_records", force: :cascade do |t|
     t.integer  "requestor_id"
-    t.boolean  "door_response"
+    t.integer  "door_response"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -117,6 +117,7 @@ ActiveRecord::Schema.define(version: 20150707163843) do
     t.boolean  "invalid_phone_number"
     t.string   "first_name"
     t.string   "last_name"
+    t.boolean  "is_international"
   end
 
   add_index "users", ["email"], name: "index_users_on_email"

@@ -32,6 +32,7 @@ class PrepareInvoicesJobTest < ActiveSupport::TestCase
 
     i = Invoice.where(payer: u).first
 
+    # This is the case for min = 50000 and max = 250000 (500$ and 250$)
     assert_equal 576500, i.amount
   end
 end
