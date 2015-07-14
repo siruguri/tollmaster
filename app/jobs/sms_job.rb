@@ -13,10 +13,11 @@ class SmsJob < ActiveJob::Base
     @client = Twilio::REST::Client.new account_sid, auth_token
 
     user = link_obj.user
+    phone_no = user.is_international? ? "+1#{user.phone_number}" : user.phone_number
     begin
       resp = @client.account.messages.create({
                                                from: Rails.application.secrets.twilio_account_phone,
-                                               to: user.phone_number,
+                                               to: phone_no,
                                                body: "Your #{I18n.t(:company_name)} Door Dashboard: #{url_for(controller: 'dashboard', action: 'dash', link_secret: temp_secret)}",
                                              })
     rescue Twilio::REST::RequestError => e

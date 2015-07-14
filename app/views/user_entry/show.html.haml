@@ -6,7 +6,8 @@
 
 .paragraph#entry-form-paragraph
   = form_tag('/user_entry/authenticate', id: 'entry-form') do
-    = text_field_tag(:primary_key, '', class: 'form-control', id: 'primary-key', autofocus: true, placeholder: 'phone number')
+    = text_field_tag(:primary_key, '', class: 'form-control', id: 'primary-key', |
+      autofocus: true, placeholder: config_or_locale(:phone_number_prompt))
 
     .form-row
       = submit_tag 'Go!', class: 'btn btn-default', id: 'pk-submit'

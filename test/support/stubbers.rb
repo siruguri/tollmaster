@@ -95,12 +95,7 @@ def set_net_stubs
   stub_request(:get, /reddit/).to_return(status: 200, body: 'stubbers stubbers stubbers stubbers stubbers')
   
   stub_request(:post, "https://#{ENV['TWILIO_TEST_ACCOUNT_SID']}:#{ENV['TWILIO_TEST_AUTH_TOKEN']}@api.twilio.com/2010-04-01/Accounts/#{ENV['TWILIO_TEST_ACCOUNT_SID']}/Messages.json").
-    with(:body => hash_including({"From"=>"15005550006", "To"=>/[0-4,6-9][0-9]{9,10}/, "Body" => /\/dash\//}),
-         :headers => {'Accept'=>'application/json', 'Accept-Charset'=>'utf-8', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded', 'User-Agent'=>'twilio-ruby/4.2.0 (ruby/x86_64-darwin12.0 2.2.2-p95)'}).
-    to_return(:status => 200, :body => valid_twilio_sms, :headers => {})
-
-  stub_request(:post, "https://#{ENV['TWILIO_TEST_ACCOUNT_SID']}:#{ENV['TWILIO_TEST_AUTH_TOKEN']}@api.twilio.com/2010-04-01/Accounts/#{ENV['TWILIO_TEST_ACCOUNT_SID']}/Messages.json").
     with(:body => hash_including({"From"=>"15005550006", "To"=>/5005550001/}),
-         :headers => {'Accept'=>'application/json', 'Accept-Charset'=>'utf-8', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded', 'User-Agent'=>'twilio-ruby/4.2.0 (ruby/x86_64-darwin12.0 2.2.2-p95)'}).
+         :headers => {'Accept'=>'application/json'}).
     to_return(:status => 400, :body => invalid_twilio_sms, :headers => {})
 end

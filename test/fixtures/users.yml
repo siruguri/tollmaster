@@ -7,6 +7,7 @@
 DEFAULTS: &DEFAULTS
   encrypted_password: <%= Devise::Encryptor.digest(User, 'password') %>
   confirmed_at: <%= Time.now.utc %>
+  is_international: <%= false %>
   
 user_1:
   email: just_a_user1@valid.com
@@ -68,3 +69,8 @@ user_with_completed_sessions:
 user_with_completed_sessions_2:
   email: user_with_completed_sessions_2@example.com
   phone_number: 2123433012
+
+user_international:
+  email: user_international@example.com
+  phone_number: 4056788111
+  is_international: <%= true %>

@@ -30,7 +30,7 @@ en:
   open_door_message: 'To open our door, please start by providing us your cell phone number. If you have already done this, your Door Dashboard is active at the link we sent you via SMS.'
   use_sms_directions_html: "You should have received an SMS message with a link to your dashboard. Please <a href='%{sms_resend_link}'>click here</a> to resend the SMS, or contact us if you are still having trouble."
   company_name: "Nomad-A-What"
-  footer_tos_text_html: "You will be charged $0.10 per minute while checked into our space. Minimum daily charge is $5 and maximum charge is $25. By using Nomad-A-What, you agree to our <a href='http://www.nomadawhat.com/legal'>community rules and terms of use</a>"
+  footer_tos_text_html: "You will be charged $0.10 per minute while checked into our space. Minimum daily charge is $5 and maximum charge is $25. By using Nomad-A-What, you agree to our <a href='http://www.nomadawhat.com/legal'>community rules and terms of use this should be there now</a>"
   name_email_text: 'Please update your profile, so we can send you receipts and say hello!'
   credit_card_duplicate: 'Credit card already used in our system'
   credit_card_info_saved: 'Credit card information valid!'
@@ -39,3 +39,4 @@ en:
   company_admin_email_from: 'hello@doorapp.com'
   after_hours_message: 'The door may only be opened between 9AM and 6PM'
   youre_in_our_system: 'That number is already in our system.'
+  phone_number_prompt: "phone number (Use + with country code for int'l numbers)"
