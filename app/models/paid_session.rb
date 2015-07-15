@@ -1,6 +1,6 @@
 class PaidSession < ActiveRecord::Base
   belongs_to :user
-  belongs_to :invoice
+  belongs_to :invoice, dependent: :destroy
   
   def duration(unit: :seconds)
     # inactive = sessions whose active attribute is false, OR ones that started yesterday or earlier will yield a duration

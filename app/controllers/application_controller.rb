@@ -15,11 +15,6 @@ class ApplicationController < ActionController::Base
     error_message = I18n.t(:message_404)
     go_back_or_root(error_message)
   end
-  rescue_from CanCan::AccessDenied do |exception|
-    error_message = I18n.t(:access_denied_message)
-    go_back_or_root(error_message)
-  end
-
   protected
   def require_link_secret
     unless params[:link_secret] && (@secret_link = SecretLink.find_by_encrypted_secret(params[:link_secret]))

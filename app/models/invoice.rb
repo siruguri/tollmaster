@@ -7,7 +7,7 @@ class Invoice < ActiveRecord::Base
     ATTEMPT_CHARGE = 4
   end
 
-  has_many :paid_sessions
+  has_many :paid_sessions, dependent: :destroy
   belongs_to :payer, class_name: 'User'
 
   def wrapped_save!

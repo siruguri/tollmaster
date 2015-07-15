@@ -6,41 +6,27 @@ class DashboardController < ApplicationController
   end
 
   def open_sesame
-    alert_mesg = notice_mesg = nil
     if @user.has_active_session?
-      status = door_open_attempt
-      if status == DoorGenie::DoorGenieStatus::OPENED
-        notice_mesg = config_or_locale(:door_is_open)
-      elsif status == DoorGenie::DoorGenieStatus::FAILED
-        alert_mesg = 'Sorry, the door did not open. Please try again.'
-      elsif status == DoorGenie::DoorGenieStatus::AFTER_HOURS
-        notice_mesg = config_or_locale(:after_hours_message)
-      end
+      door_open_attempt!
     else
-      alert_mesg = 'No active session. Maybe you want to check in first?'
+      flash[:alert] = 'No active session. Maybe you want to check in first?'
     end
 
-    redirect_to "/dash/#{@user.plain_secret}", alert: alert_mesg, notice: notice_mesg
+    redirect_to "/dash/#{@user.plain_secret}"
   end
 
   def checkin
     # Cannot check in if they can't pay
-    alert_mesg = notice_mesg = nil
-    
     if PaymentTokenRecord.find_by_user_id(@user.id)
       PaidSession.create!(user: @user, active: true, started_at: Time.now.utc)
-      notice_mesg = 'Your session has started!'
+      flash[:notice] = 'Your session has started!'
 
-      if door_open_attempt
-        notice_mesg += ' ' + I18n.t(:door_is_open)
-      else
-        notice_mesg += ' Sorry, the door did not open. Please try again.'
-      end      
+      door_open_attempt!
     else
-      alert_mesg = "error: We couldn't find payment information. Let us know if we got something wrong!"
+      flash[:alert] = "error: We couldn't find payment information. Let us know if we got something wrong!"
     end
 
-    redirect_to "/dash/#{@user.plain_secret}", alert: alert_mesg, notice: notice_mesg
+    redirect_to "/dash/#{@user.plain_secret}"
   end
   
   def checkout
@@ -55,18 +41,24 @@ class DashboardController < ApplicationController
   end
 
   private
-  def door_open_attempt
+  def door_open_attempt!
+    flash[:alert] ||= ''
+    flash[:notice] ||= ''
+    
     d = DoorMonitorRecord.new
     d.requestor = @user
     status = DoorGenie.open_door
     
     d.door_response = status
-
     if status == DoorGenie::DoorGenieStatus::OPENED
       DoorEntryMailer.admin_notification_email(@user).deliver_later
+      flash[:notice] += " #{config_or_locale(:door_is_open)}"
+    elsif status == DoorGenie::DoorGenieStatus::FAILED
+      flash[:alert] += ' Sorry, the door did not open. Please try again.'
+    elsif status == DoorGenie::DoorGenieStatus::AFTER_HOURS
+      flash[:notice] += " #{config_or_locale(:after_hours_message)}"
     end
+    
     d.save
-
-    status
   end
 end

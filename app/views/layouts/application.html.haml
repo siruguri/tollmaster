@@ -23,10 +23,10 @@
     .fixedwidth-container.main.mobile-main
       -if flash[:notice] or flash[:alert]
         .container
-        -if flash[:notice]
+        -if !flash[:notice].blank?
           .notice.notice-info
             #{flash[:notice]}
-        -if flash[:alert]
+        -if !flash[:alert].blank?
           .alert.alert-danger
             #{flash[:alert]}
       .center-div.logo-top

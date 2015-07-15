@@ -23,11 +23,8 @@ class CardRecordsController < ApplicationController
       # skip_confirmation! is done when the user has their first SMS sent
       v.skip_reconfirmation!
       v.save!
-      
-      if !tok_rec.persisted? 
-        tok_rec.save!
-        notice = t(:credit_card_info_saved)
-      end
+
+      notice = t(:credit_card_info_saved)
     end
     
     redirect_to dash_path(link_secret: params[:link_secret]), notice: notice, alert: alert
