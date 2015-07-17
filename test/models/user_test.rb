@@ -29,11 +29,8 @@ class UserTest < ActiveSupport::TestCase
       assert_equal 'Bob Bobola', users(:user_with_name).displayable_greeting
     end
     
-    it 'returns email if phone doesn\'t exist' do
-      assert_equal 'just_a_user1@valid.com'[0..20] + '...', users(:user_1).displayable_greeting
-    end
-
     it "doesn't add ellipse when not necessary" do
+      # This also confirms that phone doesn't have to exist.
       assert_equal users(:short_email).email, users(:short_email).displayable_greeting
     end
     
@@ -108,10 +105,16 @@ class UserTest < ActiveSupport::TestCase
     assert users(:user_disabled).has_supplied_token?
     assert_not users(:user_disabled).has_valid_token?
   end
+
+  test '#username' do
+    assert_equal 'first last', users(:user_username_test_2).username
+    assert_equal 'first', users(:user_username_test_1).username
+    assert_equal 'last', users(:user_username_test_3).username
+  end
   
   private
   def clear_name(u)
-    u.first_name = ''
-    u.last_name = ''
+    u.first_name = nil
+    u.last_name = nil
   end    
 end

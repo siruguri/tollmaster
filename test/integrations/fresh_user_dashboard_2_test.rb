@@ -31,7 +31,9 @@ class FreshUserDashboard2Test < Capybara::Rails::TestCase
       find('#form-submit').click
       find('#userdisplay')
       
-      assert_operator page.find('#payment-errors').text.strip.size, :>, 0
+      page.all('.payment-errors').each do |elt|
+        assert_operator elt.text.strip.size, :>, 0
+      end
     end
   end
   
@@ -78,7 +80,7 @@ class FreshUserDashboard2Test < Capybara::Rails::TestCase
     old_value = page.find("input##{id}").value()
     page.fill_in "#{id}", with: inp_text
     page.find("#form-submit").click
-    page.find('#payment-errors')
+    page.all('#payment-errors')
     
     assert_match /missing.*incorrect/i, page.body
     page.fill_in "#{id}", with: old_value

@@ -24,6 +24,11 @@ CmsConfig.find_or_create_by(source_symbol: :company_name) do |rec|
 end
 
 CmsConfig.find_or_create_by(source_symbol: :session_started) do |rec|
-  rec.target_text = 'Your session has started!'
+  rec.target_text = "Your session has started! Please don't forget to check out when you're done."
+  rec.save
+end
+
+CmsConfig.find_or_create_by(source_symbol: :greeting_header) do |rec|
+  rec.target_text = 'Please fill in your profile details so we can get you started. All fields are required.'
   rec.save
 end

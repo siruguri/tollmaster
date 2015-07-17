@@ -4,13 +4,17 @@ class DoorGenie
     AFTER_HOURS = 1
     FAILED = 2
   end
+
+  def self.is_after_hours?
+    !!(Rails.application.secrets.start_of_day_24h and
+       Time.now < (Date.today + Rails.application.secrets.start_of_day_24h.hours) or
+       Rails.application.secrets.end_of_day_24h and
+       Time.now > (Date.today + Rails.application.secrets.end_of_day_24h.hours))
+  end
   
   def self.open_door
     # Only opens during business hours, if set
-    if Rails.application.secrets.start_of_day_24h and
-      Time.now < (Date.today + Rails.application.secrets.start_of_day_24h.hours) or
-      Rails.application.secrets.end_of_day_24h and
-      Time.now > (Date.today + Rails.application.secrets.end_of_day_24h.hours)
+    if is_after_hours?
       return DoorGenieStatus::AFTER_HOURS
     end
     

@@ -117,6 +117,13 @@ class DashboardControllerTest < ActionController::TestCase
 
       Time.stubs(:now).returns(t_later)
 
+      get :dash, {link_secret: 'user_with_paid_session_secret'}
+      assert_select('input#opendoor') do |elts|
+        elts.each do |elt|
+          assert_equal 'disabled', elt.attr('disabled')
+        end
+      end
+
       assert_difference('DoorMonitorRecord.count', 1) do 
         post :open_sesame, {link_secret: 'user_with_paid_session_secret'}
       end

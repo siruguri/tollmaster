@@ -6,7 +6,7 @@ $(document).ready ->
 
     if (response.error)
        # Show the errors on the form
-       form.find('#payment-errors').text(response.error.message).show()
+       form.find('.payment-errors').text(response.error.message).show()
        form.find('.btn').prop('disabled', false)
        form.find('.btn').val('Pay!')
     else
@@ -51,9 +51,10 @@ $(document).ready ->
     cond1 && cond2
 
   post_form_load = ->
+    $('.payment-errors').text('').hide()
     for id in ['#username', '#email_address', '#primary-key', '#cc_number', '#cvc', '#exp_month', '#exp_year']
       $('input' + id).focus (evt) ->
-        $('#payment-errors').text('').hide()
+        $('.payment-errors').text('').hide()
         $('.error-box').text('').hide()
         $('.alert').hide()
         
@@ -67,7 +68,7 @@ $(document).ready ->
       Stripe.card.createToken(form, stripeResponseHandler)
       # Prevent the form from submitting with the default action
     else
-      $('#payment-errors').text('One of your inputs is missing or incorrect. Please re-check your form.').fadeIn(400)
+      $('.payment-errors').text('One of your inputs is missing or incorrect. Please re-check your form.').fadeIn(400)
 
     false
 

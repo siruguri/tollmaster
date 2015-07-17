@@ -56,10 +56,10 @@ class User < ActiveRecord::Base
 
   def username
     # Allows for checking that username in form becomes the right username in the model
-    if (first_name and first_name.strip.length > 0) or (last_name and last_name.strip.length > 0)
-      (first_name.strip.length > 0 ? "#{first_name} " : "") + last_name
-    else
+    if first_name.nil? and last_name.nil?
       nil
+    else
+      ["#{first_name}".strip, "#{last_name}".strip].join(' ').strip
     end
   end
   
@@ -141,6 +141,9 @@ class User < ActiveRecord::Base
       else
         self.first_name = form_name
       end
+
+      self.first_name ||= ''
+      self.last_name ||= ''
     end
   end
 

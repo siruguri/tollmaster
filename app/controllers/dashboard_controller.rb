@@ -3,6 +3,7 @@ class DashboardController < ApplicationController
   layout 'dashboard'
   
   def dash
+    @is_after_hours = DoorGenie.is_after_hours?
   end
 
   def open_sesame

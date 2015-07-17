@@ -7,75 +7,96 @@
 DEFAULTS: &DEFAULTS
   encrypted_password: <%= Devise::Encryptor.digest(User, 'password') %>
   confirmed_at: <%= Time.now.utc %>
+  phone_number: 77781920001
   is_international: <%= false %>
   
 user_1:
-  email: just_a_user1@valid.com
   <<: *DEFAULTS
+  email: just_a_user1@valid.com
 
 user_2:
-  phone_number: 2125550000  
   <<: *DEFAULTS
+  phone_number: 2125550000  
 
 user_only_number:
-  phone_number: 2125551235
   <<: *DEFAULTS
+  phone_number: 2125551235
 
 user_with_name:
+  <<: *DEFAULTS
   email: withname@valid.com
   first_name: Bob
   last_name: Bobola
-  <<: *DEFAULTS
 
 no_token:
+  <<: *DEFAULTS
   email: notoken@example.com
   phone_number: 2129990000
-  <<: *DEFAULTS
 
 short_email:
   email: shortme@me.com
-  <<: *DEFAULTS
   
 user_ptr_phonenumber:
+  <<: *DEFAULTS
   email: withtoken@example.com
   phone_number: 8888888888
-  <<: *DEFAULTS
 
 has_secret_not_active:
-  phone_number: 3124445566
   <<: *DEFAULTS
+  phone_number: 3124445566
 
 user_with_paid_session:
+  <<: *DEFAULTS
   email: paid_session@example.com
   phone_number: 4156689912
   first_name: user with
   last_name: paid session
-  <<: *DEFAULTS
 
 user_with_valid_twilio_number:
+  <<: *DEFAULTS
   email: valid_twilio@example.com
   phone_number: 16503124455
 
 user_with_invalid_twilio_number:
+  <<: *DEFAULTS
   email: invalid_twilio@example.com
   phone_number: 5005550001
 
 user_with_completed_sessions:
+  <<: *DEFAULTS
   email: user_with_completed_sessions@example.com
   phone_number: 2123433011
   first_name: user with
   last_name: completed sessions
 
 user_with_completed_sessions_2:
+  <<: *DEFAULTS
   email: user_with_completed_sessions_2@example.com
   phone_number: 2123433012
 
 user_international:
+  <<: *DEFAULTS
   email: user_international@example.com
   phone_number: 4056788111
   is_international: <%= true %>
 
 user_disabled:
+  <<: *DEFAULTS
   email: user_disabled@example.com
   phone_number: 4050001111
-  
+
+user_username_test_1:
+  <<: *DEFAULTS
+  email: user_username_test_1@example.com
+  first_name: first
+
+user_username_test_3:
+  <<: *DEFAULTS
+  email: user_username_test_3@example.com
+  last_name: last
+
+user_username_test_2:
+  <<: *DEFAULTS
+  email: user_username_test_2@example.com
+  first_name: first
+  last_name: last
