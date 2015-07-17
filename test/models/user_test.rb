@@ -104,6 +104,11 @@ class UserTest < ActiveSupport::TestCase
     assert v.is_international?, "#{v.is_international} is not correct"
   end
 
+  test "getting a user's token" do
+    assert users(:user_disabled).has_supplied_token?
+    assert_not users(:user_disabled).has_valid_token?
+  end
+  
   private
   def clear_name(u)
     u.first_name = ''

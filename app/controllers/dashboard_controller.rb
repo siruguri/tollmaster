@@ -19,8 +19,7 @@ class DashboardController < ApplicationController
     # Cannot check in if they can't pay
     if PaymentTokenRecord.find_by_user_id(@user.id)
       PaidSession.create!(user: @user, active: true, started_at: Time.now.utc)
-      flash[:notice] = 'Your session has started!'
-
+      flash[:notice] = config_or_locale(:session_started)
       door_open_attempt!
     else
       flash[:alert] = "error: We couldn't find payment information. Let us know if we got something wrong!"

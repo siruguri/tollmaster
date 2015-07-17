@@ -3,11 +3,11 @@
 .paragraph#userdisplay
   = "Welcome, #{@user.displayable_greeting}"
 
-- if @user.has_token?
+- if @user.has_supplied_token?
   - if @user.has_active_session?
     = form_tag '/dash/open', class: 'dash-action-form' do
       = hidden_field_tag 'link_secret', @user.plain_secret
-      %input#opendoor.btn.btn-default{type: 'submit', value: 'Open door', disabled: !@user.has_token?}
+      %input#opendoor.btn.btn-default{type: 'submit', value: 'Open door', disabled: !@user.has_valid_token?}
 
     = form_tag '/dash/checkout', class: 'dash-action-form' do
       = hidden_field_tag 'link_secret', @user.plain_secret
@@ -15,7 +15,7 @@
   - else
     = form_tag '/dash/checkin', class: 'dash-action-form' do
       = hidden_field_tag 'link_secret', @user.plain_secret
-      %input#opendoor.btn.btn-default{type: 'submit', value: 'Check in and open door', disabled: !@user.has_token?}
+      %input#opendoor.btn.btn-default{type: 'submit', value: 'Check in and open door', disabled: !@user.has_valid_token?}
 - else
   = form_tag('/card_records', id: 'payments-form') do
     = hidden_field_tag 'link_secret', @user.plain_secret

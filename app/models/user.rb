@@ -114,8 +114,12 @@ class User < ActiveRecord::Base
     s
   end
 
-  def has_token?
-    @has_token ||= PaymentTokenRecord.where(user_id: id).count > 0
+  def has_valid_token?
+    @has_valid_token ||= PaymentTokenRecord.where('user_id = ? and disabled = ?', self.id, false).count > 0
+  end
+  
+  def has_supplied_token?
+    @has_supplied_token ||= PaymentTokenRecord.where(user_id: self.id).count > 0
   end
 
   def needs_name?

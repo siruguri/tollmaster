@@ -197,4 +197,11 @@ class DashboardControllerTest < ActionController::TestCase
       assert_not @checking_out_user.has_active_session?
     end
   end
+
+  describe 'Disabled user' do
+    it 'is not asked for CC info any more' do
+      get :dash, {link_secret: 'user_disabled_secret'}
+      assert_select('form#payments-form', 0)
+    end
+  end
 end

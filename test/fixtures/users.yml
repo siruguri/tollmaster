@@ -74,3 +74,8 @@ user_international:
   email: user_international@example.com
   phone_number: 4056788111
   is_international: <%= true %>
+
+user_disabled:
+  email: user_disabled@example.com
+  phone_number: 4050001111
+  

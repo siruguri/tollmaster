@@ -12,3 +12,9 @@ ptr_for_paid_session:
   user: user_with_paid_session
   token_processor: stripe
   token_value: user_ptr_token_2
+
+ptr_user_disabled:
+  user: user_disabled
+  token_processor: stripe
+  token_value: ptr_user_disabled_token
+  disabled: true

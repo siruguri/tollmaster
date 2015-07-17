@@ -22,3 +22,8 @@ CmsConfig.find_or_create_by(source_symbol: :company_name) do |rec|
   rec.target_text = "Nomad-a-What"
   rec.save
 end
+
+CmsConfig.find_or_create_by(source_symbol: :session_started) do |rec|
+  rec.target_text = 'Your session has started!'
+  rec.save
+end
