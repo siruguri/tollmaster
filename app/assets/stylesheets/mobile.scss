@@ -1,6 +1,8 @@
 .mobile-main {
-  background-color: #F7F7F7;
+  background-color: $background-fadedwhite;
   margin-top: 10px;
+  border-radius: 5px;
+  border: 1px solid $border-blue;
 }
 
 .logo-top {
@@ -13,7 +15,7 @@
   height: 100%;
   z-index: -1;
   position: absolute;
-  background-color: $background-red;
+  background-color: $background-white;
   top: 0;
   left: 0;
 }

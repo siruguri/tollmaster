@@ -44,7 +44,7 @@ class UserEntryController < ApplicationController
   end
   
   def resend_sms
-    @user = User.find_by_phone_number(params[:primary_key])
+    @user = User.find_by_phone_number(@canonical_number[:number])
 
     if @user
       new_link = @user.reset_link!

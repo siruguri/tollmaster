@@ -50,11 +50,23 @@ class UserEntryControllerTest < ActionController::TestCase
     it "shows resend SMS screen" do
       post :authenticate, {primary_key: '8888888888'}
       assert_template :entry_bottom
-      assert_match /\san.*sms/i, response.body
+      #      assert_match /\san.*sms/i, response.body
+      assert_equal 'known_user', assigns(:partial_name)
 
       assert_select('a') do |elt|
         assert_match '/user_entry/resend_sms', elt.attr('href')
       end
+    end
+
+    it "recognizes the user when the number has leading 1 or 0 or nonnumeric characters" do
+      post :authenticate, {primary_key: '08888888888'}
+      assert_match /\san.*sms/i, response.body
+
+      post :authenticate, {primary_key: '18888888888'}
+      assert_equal 'known_user', assigns(:partial_name)
+
+      post :authenticate, {primary_key: '888-888-8888'}
+      assert_equal 'known_user', assigns(:partial_name)
     end
   end
 

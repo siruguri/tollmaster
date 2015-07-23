@@ -32,3 +32,8 @@ CmsConfig.find_or_create_by(source_symbol: :greeting_header) do |rec|
   rec.target_text = 'Please fill in your profile details so we can get you started. All fields are required.'
   rec.save
 end
+
+CmsConfig.find_or_create_by(source_symbol: :checked_out) do |rec|
+  rec.target_text = 'Checked out!'
+  rec.save
+end

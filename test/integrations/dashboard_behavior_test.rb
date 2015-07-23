@@ -16,12 +16,9 @@ class DashboardBehaviorTest < Capybara::Rails::TestCase
     end
     
     it "can open door" do
-      Time.stubs(:now).returns(Date.today + 12.hours)
       click_button 'Open door'
       assert_match /should be open/i, page.body
       assert_enqueued_jobs 1
-
-      Time.unstub :now
     end
 
     it "can check out" do

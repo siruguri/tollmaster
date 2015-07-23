@@ -64,6 +64,9 @@ group :development, :test do
   # Use sqlite3 as the database for Active Record in dev and test envs  
   gem 'sqlite3'
 
+  # For integration tests
+  gem 'timecop'
+  
   gem 'pry'
   gem 'pry-remote'
   gem 'pry-stack_explorer'

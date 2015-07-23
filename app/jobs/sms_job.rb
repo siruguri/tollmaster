@@ -13,7 +13,7 @@ class SmsJob < ActiveJob::Base
     @client = Twilio::REST::Client.new account_sid, auth_token
 
     user = link_obj.user
-    phone_no = user.is_international? ? "+1#{user.phone_number}" : user.phone_number
+    phone_no = user.is_international? ? "+#{user.phone_number}" : user.phone_number
     begin
       resp = @client.account.messages.create({
                                                from: Rails.application.secrets.twilio_account_phone,

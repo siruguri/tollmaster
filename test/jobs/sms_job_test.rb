@@ -28,7 +28,7 @@ class SmsJobTest < ActiveSupport::TestCase
 
   test 'international user gets international sms' do
     stub_request(:post, "https://#{ENV['TWILIO_TEST_ACCOUNT_SID']}:#{ENV['TWILIO_TEST_AUTH_TOKEN']}@api.twilio.com/2010-04-01/Accounts/#{ENV['TWILIO_TEST_ACCOUNT_SID']}/Messages.json").
-      with(:body => hash_including({"From"=>"15005550006", To: '+14056788111', "Body" => /\/dash\//}),
+      with(:body => hash_including({"From"=>"15005550006", To: '+4056788111', "Body" => /\/dash\//}),
            :headers => {'Accept'=>'application/json'}).
       to_return(:status => 200, :body => valid_twilio_sms, :headers => {})
 

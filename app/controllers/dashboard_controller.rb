@@ -31,7 +31,7 @@ class DashboardController < ApplicationController
   
   def checkout
     if @user.inactivate_sessions!
-      notice_mesg = t(:checked_out)
+      notice_mesg = config_or_locale(:checked_out)
       PrepareInvoicesJob.perform_later(@user)
     else
       alert_mesg = 'failure'
