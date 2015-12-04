@@ -3,7 +3,7 @@ class PaymentTokenRecord < ActiveRecord::Base
 
   validates :token_value, presence: true
 
-  after_save :get_stripe_customer_id
+  after_create :get_stripe_customer_id
 
   def get_stripe_customer_id
     unless self.customer_id

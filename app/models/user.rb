@@ -91,7 +91,7 @@ class User < ActiveRecord::Base
         end
       end
     rescue Exception => e
-      puts "\n\nDidn't save: #{e}"
+      puts "\n\nERROR: Didn't save: #{e}\n\n"
       # Guess I'll ignore it for now? An invoicing will be attempted next time
       # the user checks out.
     end
@@ -99,14 +99,6 @@ class User < ActiveRecord::Base
 
   def make_secret_link!
     # create a new secret link record for the user.
-    s=SecretLink.new
-    s.user = self
-    s.save!
-
-    s
-  end
-
-  def reset_link!
     s=SecretLink.new
     s.user = self
     s.save!

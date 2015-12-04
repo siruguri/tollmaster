@@ -2,7 +2,7 @@
   Welcome to RockIT! Please enter your CC information.
     
 .entry-message-body
-  .hidden#publishable-key{'data-key-value' => @publishable_stripe_key}
+  .hidden#publishable-key{'data-key-value' => @stripe_publishable_key}
 
   = form_tag('/card_records', id: 'payments-form') do
     #payment-errors{style: 'display: none'}

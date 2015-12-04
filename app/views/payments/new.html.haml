@@ -1,4 +1,4 @@
-.hidden#publishable-key{'data-key-value' => @publishable_stripe_key}
+.hidden#publishable-key{'data-key-value' => @stripe_publishable_key}
 
 = form_tag('/payments', id: 'payments-form') do
   = label_tag(:primary_key, 'Payment for (phone)', class: 'form-control')

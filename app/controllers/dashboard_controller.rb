@@ -4,6 +4,7 @@ class DashboardController < ApplicationController
   
   def dash
     @is_after_hours = DoorGenie.is_after_hours?
+    @stripe_publishable_key = Rails.application.secrets.stripe_publishable_key
   end
 
   def open_sesame

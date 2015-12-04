@@ -20,10 +20,16 @@ class CardRecordsController < ApplicationController
       end
       v.email = params[:email_address]
 
+      # The token will be enabled when the customer ID is obtained from Stripe
+      tok_rec.disabled = true
       # skip_confirmation! is done when the user has their first SMS sent
       v.skip_reconfirmation!
-      v.save!
 
+      ActiveRecord::Base.transaction do
+        v.save!
+        tok_rec.save!
+      end
+      
       notice = t(:credit_card_info_saved)
     end
     

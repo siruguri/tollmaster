@@ -4,18 +4,12 @@
 # is considered to be the first unless any hosts have the primary
 # property set.  Don't declare `role :all`, it's a meta role.
 
-role :app, %w{www-data@107.170.193.44}
-role :web, %w{www-data@107.170.193.44}
-role :db, %w{www-data@107.170.193.44}
+remote_server = ENV['RAILS_REMOTE_SERVER']
+remote_port = ENV['RAILS_REMOTE_PORT']
 
-
-# Extended Server Syntax
-# ======================
-# This can be used to drop a more detailed server definition into the
-# server list. The second argument is a, or duck-types, Hash and is
-# used to set extended properties on the server.
-
-server '107.170.193.44', user: 'www-data', roles: %w{web app}, my_property: :my_value
+server remote_server, user: "www-data", port: remote_port, roles: %w(web app db)
+set :branch, 'master'
+set :rails_env, :production
 
 # Custom SSH Options
 # ==================

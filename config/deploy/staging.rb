@@ -1,7 +1,12 @@
 # It's good security practice to use a different port value for the SSH daemon than the default (22)
-server "mydeploymentserver.net", user: "www-data", port: 220
 
-set :branch, 'master'
+remote_server = ENV['RAILS_REMOTE_DEPLOYMENT_SERVER']
+remote_port = ENV['RAILS_REMOTE_PORT']
+
+server remote_server, user: "www-data", port: remote_port, roles: %w(web app db)
+
+set :deploy_to, "/var/www/railsapps/#{app_name}"
+set :branch, 'working'
 set :rails_env, :development
 
 set :ssh_options, {

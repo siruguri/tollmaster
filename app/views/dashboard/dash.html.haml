@@ -39,7 +39,7 @@
     .paragraph
       Please supply us a credit card to be able to check in and enter.
 
-    .hidden#publishable-key{'data-key-value' => ENV['STRIPE_PUBLISHABLE_KEY']}
+    .hidden#publishable-key{'data-key-value' => @stripe_publishable_key}
     = label_tag(:cc_number, 'CC #', class: 'form-control')
     %input{id: 'cc_number', class: 'form-control', "data-stripe" => "number"}
     = label_tag(:cvc, 'CVC', class: 'form-control')

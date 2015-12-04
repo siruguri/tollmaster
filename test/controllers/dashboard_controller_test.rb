@@ -113,7 +113,7 @@ class DashboardControllerTest < ActionController::TestCase
     it 'cannot open door after hours' do
       a=Date.today
       t=Time.new(a.year, a.month, a.day) + 12.hours
-      t_later = Time.new(a.year, a.month, a.day) + 23.hours
+      t_later = Time.new(a.year, a.month, a.day) + 23.hours + 1.minutes
 
       Time.stubs(:now).returns(t_later)
 
