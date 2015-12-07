@@ -10,6 +10,7 @@ class InvoiceMailerTest < ActionMailer::TestCase
     perform_enqueued_jobs do 
       PrepareInvoicesJob.perform_now(u) #InvoiceMailer.invoice_email(u)
     end
+    
     assert_not ActionMailer::Base.deliveries.empty?
     email = ActionMailer::Base.deliveries.last
 

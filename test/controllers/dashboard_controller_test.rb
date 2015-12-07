@@ -56,14 +56,26 @@ class DashboardControllerTest < ActionController::TestCase
     end
 
     it 'allows user to check in with payment record' do
-      PaymentTokenRecord.create(user: @inactive_user, token_processor: 'stripe', token_value: "atoken")
+      queue_size = enqueued_jobs.size
+
+      PaymentTokenRecord.create(user: @inactive_user, token_processor: 'stripe', token_value: "atoken",
+                                disabled: false, customer_id: 4242)
       assert_difference('PaidSession.count', 1) do
         post :checkin, {link_secret: 'has_secret_not_active_secret'}
       end
 
+      assert_equal ActionMailer::DeliveryJob, enqueued_jobs[queue_size][:job]
       assert_redirected_to '/dash/has_secret_not_active_secret'
     end
 
+    it 'bars user from check in with disabled payment record' do
+      PaymentTokenRecord.create(user: @inactive_user, token_processor: 'stripe', token_value: "atoken",
+                                disabled: true)
+      refute_difference('PaidSession.count') do
+        post :checkin, {link_secret: 'has_secret_not_active_secret'}
+      end
+    end
+    
     it 'fails gracefully for checkin, without payment record' do
       assert_no_difference('PaidSession.count') do
         post :checkin, {link_secret: 'has_secret_not_active_secret'}
@@ -130,7 +142,7 @@ class DashboardControllerTest < ActionController::TestCase
 
       rec = DoorMonitorRecord.last
       assert_redirected_to '/dash/user_with_paid_session_secret'
-      assert_enqueued_jobs 0
+      assert_enqueued_jobs 1 # A mail is sent
       
       assert_equal DoorGenie::DoorGenieStatus::AFTER_HOURS, rec.door_response
       assert_match /opened.*between/i, flash[:notice]

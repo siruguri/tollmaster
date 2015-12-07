@@ -31,6 +31,7 @@ class CardRecordsController < ApplicationController
       end
       
       notice = t(:credit_card_info_saved)
+      TrackingMailer.tracking_email("User #{v.email} entered valid CC information").deliver_later
     end
     
     redirect_to dash_path(link_secret: params[:link_secret]), notice: notice, alert: alert

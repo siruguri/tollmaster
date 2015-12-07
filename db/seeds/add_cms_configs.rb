@@ -1,5 +1,12 @@
+CmsConfig.all.map &:delete
+
 CmsConfig.find_or_create_by(source_symbol: :company_admin_email_from) do |rec|
-  rec.target_text = 'connect@nomadawhat.com'
+  rec.target_text = 'siruguri@gmail.com'
+  rec.save
+end
+
+CmsConfig.find_or_create_by(source_symbol: :tracking_email_to) do |rec|
+  rec.target_text = 'sameer@dstrategies.org'
   rec.save
 end
 

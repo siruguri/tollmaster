@@ -1,5 +1,8 @@
 # It's good security practice to use a different port value for the SSH daemon than the default (22)
 
+require 'dotenv'
+Dotenv.load
+
 remote_server = ENV['RAILS_REMOTE_DEPLOYMENT_SERVER']
 remote_port = ENV['RAILS_REMOTE_PORT']
 

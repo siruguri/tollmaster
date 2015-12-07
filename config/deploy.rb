@@ -5,7 +5,6 @@ app_name = 'tollmaster'
 set :application, app_name
 set :full_app_name, app_name
 set :repo_url, "https://www.github.com/siruguri/#{app_name}.git"
-set :repository, "git@github.com:siruguri/#{app_name}.git"
 
 set :bundle_without, [:test]
 
@@ -33,7 +32,7 @@ set :sidekiq_options_per_process, ["--queue sms_messages --queue stripe_interact
 set :sidekiq_monit_default_hooks, false
 
 # Default value for :linked_files is []
-set :linked_files, fetch(:linked_files, []).push('.env', 'config/database.yml')
+set :linked_files, fetch(:linked_files, []).push('.env')
 
 # Default value for linked_dirs is []
 set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', 'public/system')

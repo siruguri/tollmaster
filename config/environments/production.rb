@@ -64,7 +64,7 @@ TollMaster::Application.configure do
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
-  # config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.raise_delivery_errors = true
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation can not be found).
@@ -79,13 +79,13 @@ TollMaster::Application.configure do
   # Use default logging formatter so that PID and timestamp are not suppressed.
 
   config.log_formatter = ::Logger::Formatter.new
-  config.action_mailer.default_url_options = { :host => '107.170.193.44', port: 80 }
+  config.action_mailer.default_url_options = { :host => Rails.application.secrets.mailer_default_ip, port: 80 }
   config.action_mailer.smtp_settings = {
-      :address        => 'smtp.mandrillapp.com',
+      :address        => Rails.application.secrets.smtp_provider,
       :port           => '587',
       :authentication => :plain,
-      :user_name      => ENV['MANDRILL_USERNAME'],
-      :password       => ENV['MANDRILL_PASSWORD'],
+      :user_name      => Rails.application.secrets.mail_username,
+      :password       => Rails.application.secrets.mail_password,
       :enable_starttls_auto => true
   }
 

@@ -29,8 +29,9 @@ class CardRecordsControllerTest < ActionController::TestCase
       end
 
       assert PaymentTokenRecord.last.disabled?
+      assert_equal 2 + queue_size, enqueued_jobs.size
       assert_equal StripeCustomerIdJob, enqueued_jobs[0][:job]
-      assert_equal 1 + queue_size, enqueued_jobs.size
+      assert_equal ActionMailer::DeliveryJob, enqueued_jobs[1][:job]
       
       u = users(:has_secret_not_active)
       assert_redirected_to dash_path(link_secret: sl)

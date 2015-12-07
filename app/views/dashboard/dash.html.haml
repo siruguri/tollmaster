@@ -14,7 +14,7 @@
       %input.btn.btn-default{type: 'submit', value: 'Check out'}
   - else
     = form_tag '/dash/checkin', class: 'dash-action-form' do
-      = hidden_field_tag 'link_secret', @user.plain_secret
+      = hidden_field_tag 'link_secret', @user.plain_secret, id: 'linksecret'
       %input#opendoor.btn.btn-default{type: 'submit', value: 'Check in and open door', disabled: (!@user.has_valid_token? || @is_after_hours)}
 - else
   .paragraph
