@@ -65,7 +65,7 @@ class DashboardControllerTest < ActionController::TestCase
       end
 
       assert_equal ActionMailer::DeliveryJob, enqueued_jobs[queue_size][:job]
-      assert_redirected_to '/dash/has_secret_not_active_secret'
+      assert_redirected_to dash_path(link_secret: 'has_secret_not_active_secret')
     end
 
     it 'bars user from check in with disabled payment record' do
@@ -81,13 +81,13 @@ class DashboardControllerTest < ActionController::TestCase
         post :checkin, {link_secret: 'has_secret_not_active_secret'}
       end
 
-      assert_redirected_to '/dash/has_secret_not_active_secret'
+      assert_redirected_to dash_path(link_secret: 'has_secret_not_active_secret')
       assert_match /couldn.t find/i, flash[:alert]
     end
 
     it 'fails gracefully for checkout, without payment record' do
         post :checkout, {link_secret: 'has_secret_not_active_secret'}
-        assert_redirected_to '/dash/has_secret_not_active_secret'
+        assert_redirected_to dash_path(link_secret: 'has_secret_not_active_secret')
     end
     
     it 'does not allow inactive users to open the door' do
@@ -95,7 +95,7 @@ class DashboardControllerTest < ActionController::TestCase
         post :open_sesame, {link_secret: 'has_secret_not_active_secret'}
       end
 
-      assert_redirected_to '/dash/has_secret_not_active_secret'
+      assert_redirected_to dash_path(link_secret: 'has_secret_not_active_secret')
       assert_match /check.in.first/i, flash[:alert]
     end
   end

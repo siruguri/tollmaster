@@ -14,7 +14,7 @@ class DashboardController < ApplicationController
       flash[:alert] = 'No active session. Maybe you want to check in first?'
     end
 
-    redirect_to "/dash/#{@user.plain_secret}"
+    redirect_to dash_path(link_secret: @user.plain_secret)
   end
 
   def checkin
