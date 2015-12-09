@@ -1,7 +1,7 @@
 .form-element-row
   Total outstanding amount: #{sprintf("$%0.2f", @total/100.0)}
 .form-element-row
-  = form_tag '/profiles/charge_invoices', method: :post do
+  = form_tag charge_invoices_users_path, method: :post do
     = submit_tag 'Send out invoices', class: 'btn btn-default'
 
 %h1

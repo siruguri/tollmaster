@@ -4,7 +4,7 @@
 .entry-message-body
   .hidden#publishable-key{'data-key-value' => @stripe_publishable_key}
 
-  = form_tag('/card_records', id: 'payments-form') do
+  = form_tag(card_records_path, id: 'payments-form') do
     #payment-errors{style: 'display: none'}
     = label_tag(:cc_number, 'CC #', class: 'form-control')
     %input#cc_number.form-control{"data-stripe" => "number", autofocus: true}
