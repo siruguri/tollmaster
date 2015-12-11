@@ -14,6 +14,6 @@ class AdminNotificationMailerTest < ActionMailer::TestCase
     assert_match /user with completed sessions/, email.body.raw_source
     assert_match /dummy42/, email.body.raw_source
     assert_equal ['connect@nomadawhat.com'], email.from
-    assert_equal Rails.application.secrets.company_admin_email, email.to[0]
+    assert_equal CmsConfig.find_by_source_symbol(:company_admin_email_from).target_text, email.to[0]
   end
 end
