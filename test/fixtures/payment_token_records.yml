@@ -2,16 +2,22 @@ ptr_1:
   user: user_1
   token_processor: stripe
   token_value: tok_uu_tok
+  disabled: false
+  customer_id: is_a_customer_id
 
 ptr_phonenumber:
   user: user_ptr_phonenumber
   token_processor: stripe
   token_value: user_ptr_token
+  disabled: false
+  customer_id: is_a_customer_id
 
 ptr_for_paid_session:
   user: user_with_paid_session
   token_processor: stripe
   token_value: user_ptr_token_2
+  customer_id: is_a_customer_id
+  disabled: false
 
 ptr_user_disabled:
   user: user_disabled

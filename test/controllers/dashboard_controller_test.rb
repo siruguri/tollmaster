@@ -56,26 +56,39 @@ class DashboardControllerTest < ActionController::TestCase
     end
 
     it 'allows user to check in with payment record' do
-      PaymentTokenRecord.create(user: @inactive_user, token_processor: 'stripe', token_value: "atoken")
+      queue_size = enqueued_jobs.size
+      PaymentTokenRecord.create(user: @inactive_user, token_processor: 'stripe', token_value: "atoken",
+                                disabled: false, customer_id: 4242)
       assert_difference('PaidSession.count', 1) do
         post :checkin, {link_secret: 'has_secret_not_active_secret'}
       end
 
-      assert_redirected_to '/dash/has_secret_not_active_secret'
+      assert_equal ActionMailer::DeliveryJob, enqueued_jobs[queue_size][:job]
+      # Body of email is correct
+      assert_match /with checkin/, enqueued_jobs[queue_size][:args][4]
+      assert_redirected_to dash_path(link_secret: 'has_secret_not_active_secret')
     end
 
+    it 'bars user from check in with disabled payment record' do
+      PaymentTokenRecord.create(user: @inactive_user, token_processor: 'stripe', token_value: "atoken",
+                                disabled: true)
+      refute_difference('PaidSession.count') do
+        post :checkin, {link_secret: 'has_secret_not_active_secret'}
+      end
+    end
+    
     it 'fails gracefully for checkin, without payment record' do
       assert_no_difference('PaidSession.count') do
         post :checkin, {link_secret: 'has_secret_not_active_secret'}
       end
 
-      assert_redirected_to '/dash/has_secret_not_active_secret'
+      assert_redirected_to dash_path(link_secret: 'has_secret_not_active_secret')
       assert_match /couldn.t find/i, flash[:alert]
     end
 
     it 'fails gracefully for checkout, without payment record' do
         post :checkout, {link_secret: 'has_secret_not_active_secret'}
-        assert_redirected_to '/dash/has_secret_not_active_secret'
+        assert_redirected_to dash_path(link_secret: 'has_secret_not_active_secret')
     end
     
     it 'does not allow inactive users to open the door' do
@@ -83,7 +96,7 @@ class DashboardControllerTest < ActionController::TestCase
         post :open_sesame, {link_secret: 'has_secret_not_active_secret'}
       end
 
-      assert_redirected_to '/dash/has_secret_not_active_secret'
+      assert_redirected_to dash_path(link_secret: 'has_secret_not_active_secret')
       assert_match /check.in.first/i, flash[:alert]
     end
   end
@@ -113,7 +126,7 @@ class DashboardControllerTest < ActionController::TestCase
     it 'cannot open door after hours' do
       a=Date.today
       t=Time.new(a.year, a.month, a.day) + 12.hours
-      t_later = Time.new(a.year, a.month, a.day) + 23.hours
+      t_later = Time.new(a.year, a.month, a.day) + 23.hours + 1.minutes
 
       Time.stubs(:now).returns(t_later)
 
@@ -130,7 +143,7 @@ class DashboardControllerTest < ActionController::TestCase
 
       rec = DoorMonitorRecord.last
       assert_redirected_to '/dash/user_with_paid_session_secret'
-      assert_enqueued_jobs 0
+      assert_enqueued_jobs 1 # A mail is sent
       
       assert_equal DoorGenie::DoorGenieStatus::AFTER_HOURS, rec.door_response
       assert_match /opened.*between/i, flash[:notice]
@@ -138,6 +151,7 @@ class DashboardControllerTest < ActionController::TestCase
     end
     
     it 'can open door' do
+      queue_size = enqueued_jobs.size
       initial_count = DoorMonitorRecord.count
       assert_enqueued_jobs 0
 
@@ -146,6 +160,9 @@ class DashboardControllerTest < ActionController::TestCase
 
       Time.stubs(:now).returns(t_later)
       post :open_sesame, {link_secret: 'user_with_paid_session_secret'}
+
+      assert_equal ActionMailer::DeliveryJob, enqueued_jobs[queue_size][:job]
+      refute_match /with checkin/, enqueued_jobs[queue_size][:args][4]
 
       assert_redirected_to '/dash/user_with_paid_session_secret'
       assert_equal initial_count + 1, DoorMonitorRecord.count

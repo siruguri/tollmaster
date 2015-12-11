@@ -1,11 +1,11 @@
-.hidden#publishable-key{'data-key-value' => @publishable_stripe_key}
+.hidden#publishable-key{'data-key-value' => @stripe_publishable_key}
 .error-box.my-hidden
 
 .paragraph
   = config_or_locale(:open_door_message)
 
 .paragraph#entry-form-paragraph
-  = form_tag('/user_entry/authenticate', id: 'entry-form') do
+  = form_tag(authenticate_user_entry_path, id: 'entry-form') do
     = text_field_tag(:primary_key, '', class: 'form-control', id: 'primary-key', |
       autofocus: true, placeholder: config_or_locale(:phone_number_prompt))
 

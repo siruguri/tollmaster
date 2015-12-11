@@ -33,6 +33,8 @@ class User < ActiveRecord::Base
   def inactivate_sessions!
     # There can always only be one active session for the day
     a=Date.today
+    now_time = Time.now
+    
     t=Time.new(a.year, a.month, a.day)
     
     active_sessions = PaidSession.where(active: true, user_id: self.id).where('started_at > ?', t).all
@@ -41,7 +43,7 @@ class User < ActiveRecord::Base
     if (orig_count = active_sessions.count) > 0
       active_sessions.each do |session|
         session.active = false
-        session.ended_at = Time.now
+        session.ended_at = now_time
         session.save
         succesful_inactivations += 1
       end
@@ -91,9 +93,13 @@ class User < ActiveRecord::Base
         end
       end
     rescue Exception => e
-      puts "\n\nDidn't save: #{e}"
+      puts "\n\nERROR: Didn't save: #{e}\n\n"
       # Guess I'll ignore it for now? An invoicing will be attempted next time
-      # the user checks out.
+      # the user checks out. Return false
+
+      false
+    else
+      true
     end
   end
 
@@ -106,16 +112,9 @@ class User < ActiveRecord::Base
     s
   end
 
-  def reset_link!
-    s=SecretLink.new
-    s.user = self
-    s.save!
-
-    s
-  end
-
   def has_valid_token?
-    @has_valid_token ||= PaymentTokenRecord.where('user_id = ? and disabled = ?', self.id, false).count > 0
+    @has_valid_token ||= PaymentTokenRecord.where('user_id = ? and disabled = ? and customer_id is not null',
+                                                  self.id, false).count > 0
   end
   
   def has_supplied_token?

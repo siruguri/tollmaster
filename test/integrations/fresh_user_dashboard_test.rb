@@ -17,9 +17,11 @@ class FreshUserDashboardTest < Capybara::Rails::TestCase
       valid_name
       valid_credit_card
       find('#form-submit').click
-      
-      page.find '#opendoor'
+
+      page.find('#linksecret', visible: false)
       assert_match /\/dash\/.+/, page.current_path
+      assert_match /information valid/, page.body
+      
       v = SecretLink.find_by_encrypted_secret(@secret).user
       assert_equal test_email, v.email
     end

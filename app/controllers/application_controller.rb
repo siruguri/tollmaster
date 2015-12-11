@@ -50,9 +50,4 @@ class ApplicationController < ActionController::Base
       redirect_to root_url, :alert => message
     end
   end 
-
-  # Use URL options to set locale. I prefer it that way.
-  def self.default_url_options(options={})
-    { locale: I18n.locale }
-  end
 end

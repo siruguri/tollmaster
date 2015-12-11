@@ -5,7 +5,7 @@ class UserEntryController < ApplicationController
   before_action :set_canonical_number, except: :show
   
   def show
-    @publishable_stripe_key = ENV['STRIPE_PUBLISHABLE_KEY']
+    @stripe_publishable_key = Rails.application.secrets.stripe_publishable_key
   end
 
   def authenticate
@@ -47,7 +47,7 @@ class UserEntryController < ApplicationController
     @user = User.find_by_phone_number(@canonical_number[:number])
 
     if @user
-      new_link = @user.reset_link!
+      new_link = @user.make_secret_link!
       SmsJob.perform_later(new_link, new_link.temporary_secret)
     end
   end

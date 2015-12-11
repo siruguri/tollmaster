@@ -18,6 +18,7 @@ class CardRecordsControllerTest < ActionController::TestCase
       test_email = 'emailme@me.com'
       test_username = 'thats my name'
       
+      queue_size = enqueued_jobs.size
       assert_difference('PaymentTokenRecord.count', 1) do
         post :create, {link_secret: sl,
                        email_address: test_email,
@@ -27,6 +28,11 @@ class CardRecordsControllerTest < ActionController::TestCase
                       }
       end
 
+      assert PaymentTokenRecord.last.disabled?
+      assert_equal 2 + queue_size, enqueued_jobs.size
+      assert_equal StripeCustomerIdJob, enqueued_jobs[0][:job]
+      assert_equal ActionMailer::DeliveryJob, enqueued_jobs[1][:job]
+      
       u = users(:has_secret_not_active)
       assert_redirected_to dash_path(link_secret: sl)
       assert_equal u, PaymentTokenRecord.last.user

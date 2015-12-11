@@ -37,6 +37,7 @@ en:
   checked_out: 'Checked out!'
   door_is_open: 'The door should be open.'
   company_admin_email_from: 'hello@doorapp.com'
+  tracker_email_receiver: 'siruguri@gmail.com'
   after_hours_message: 'The door may only be opened between 9AM and 6PM'
   youre_in_our_system: 'That number is already in our system.'
   phone_number_prompt: "phone number (Use + with country code for int'l numbers)"
