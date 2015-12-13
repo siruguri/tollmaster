@@ -75,6 +75,8 @@ class UserEntryControllerTest < ActionController::TestCase
       assert_enqueued_with(job: SmsJob) do
         get :resend_sms, {primary_key: '8888888888'}
       end
+
+      assert_equal 1, enqueued_jobs.size
     end
   end
 
