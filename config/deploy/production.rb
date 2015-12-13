@@ -4,6 +4,9 @@
 # is considered to be the first unless any hosts have the primary
 # property set.  Don't declare `role :all`, it's a meta role.
 
+require 'dotenv'
+Dotenv.load
+
 remote_server = ENV['RAILS_REMOTE_SERVER']
 remote_port = ENV['RAILS_REMOTE_PORT']
 

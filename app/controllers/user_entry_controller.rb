@@ -48,7 +48,6 @@ class UserEntryController < ApplicationController
 
     if @user
       new_link = @user.make_secret_link!
-      SmsJob.perform_later(new_link, new_link.temporary_secret)
     end
   end
   
