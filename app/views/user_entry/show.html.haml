@@ -1,13 +1,14 @@
 .hidden#publishable-key{'data-key-value' => @stripe_publishable_key}
-.error-box.my-hidden
+.error-box.my-hidden#entry-form-container
 
-.paragraph
-  = config_or_locale(:open_door_message)
+.entry-form-container
+  .paragraph
+    = config_or_locale(:open_door_message)
 
-.paragraph#entry-form-paragraph
-  = form_tag(authenticate_user_entry_path, id: 'entry-form') do
-    = text_field_tag(:primary_key, '', class: 'form-control', id: 'primary-key', |
-      autofocus: true, placeholder: config_or_locale(:phone_number_prompt))
+  .paragraph#entry-form-paragraph
+    = form_tag(authenticate_user_entry_path, id: 'entry-form') do
+      = text_field_tag(:primary_key, '', class: 'form-control', id: 'primary-key', |
+        autofocus: true, placeholder: config_or_locale(:phone_number_prompt))
 
-    .form-row
-      = submit_tag 'Go!', class: 'btn btn-default', id: 'pk-submit'
+      .form-row
+        = submit_tag 'Go!', class: 'btn btn-default', id: 'pk-submit'

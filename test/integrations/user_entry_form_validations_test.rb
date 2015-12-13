@@ -30,7 +30,7 @@ class UserEntryFormValidationsTest < Capybara::Rails::TestCase
   test "Known user shows SMS message" do
     fill_in 'primary-key', with: users(:user_2).phone_number
     find('#pk-submit').click
-    q = find('#primary-key')
+    q = find('#entry-form-container', visible: false)
     assert_match /sms/i, body
   end
 
