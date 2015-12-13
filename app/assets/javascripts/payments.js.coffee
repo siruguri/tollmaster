@@ -2,12 +2,17 @@ page_functions = ->
   fill_suffix_box = (data) ->
     $('#primary-key').prop('disabled', true)
     $('#pk-submit').hide()
-    $('#entry-form-paragraph').after(data)
+    $('.entry-form-container').after(data)
 
-    if ($('#send-first-sms-form'))
+    if ($('#send-first-sms-form').length != 0)
       $('#send-first-sms-form').append(
         $("<input>").attr('type', 'hidden').attr('name', 'primary_key').val($('#entry-form #primary-key').val())
       )
+    else
+      # Let's remove the top form when we get the re-send message
+      # to make it clearer
+
+      $('.entry-form-container').hide()
     null
 
   $('#entry-form').submit (evt) ->
