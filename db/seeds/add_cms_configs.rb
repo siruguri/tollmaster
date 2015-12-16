@@ -21,7 +21,7 @@ CmsConfig.find_or_create_by(source_symbol: :open_door_message) do |rec|
 end
 
 CmsConfig.find_or_create_by(source_symbol: :use_sms_directions_html) do |rec|
-  rec.target_text = "You should have received an SMS message with a link to your dashboard. Please <a href='%{sms_resend_link}'>click here</a> to resend the SMS, or contact us if you are still having trouble."
+  rec.target_text = "A link to your dashboard was sent via text. Please click the button below to resend text, or contact us for help."
   rec.save
 end
 

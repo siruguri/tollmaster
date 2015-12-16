@@ -106,7 +106,7 @@ h1 {
 }
 
 .resend-sms-alert {
-  color: white;
+  a { color: white; }
   background-color: red;
   width: 40%;
   margin: 0 auto;

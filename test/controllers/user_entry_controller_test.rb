@@ -53,7 +53,7 @@ class UserEntryControllerTest < ActionController::TestCase
       #      assert_match /\san.*sms/i, response.body
       assert_equal 'known_user', assigns(:partial_name)
 
-      assert_select('a') do |elt|
+      assert_select('.button a') do |elt|
         assert_match '/user_entry/resend_sms', elt.attr('href')
       end
     end

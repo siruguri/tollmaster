@@ -8,4 +8,4 @@ config_2:
 
 config_3:
   source_symbol: <%= :use_sms_directions_html %>
-  target_text: Nomad-a-What an sms <a href='%{sms_resend_link} '></a>
+  target_text: Nomad-a-What received an sms <a href='%{sms_resend_link} '></a>

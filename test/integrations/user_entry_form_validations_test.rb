@@ -23,7 +23,7 @@ class UserEntryFormValidationsTest < Capybara::Rails::TestCase
     find('#first-sms-submit').click
     find('#pk-submit')
 
-    assert_match /received.an.sms/i, body
+    assert_match /just.sent.*text/i, body
     assert_enqueued_jobs 1
   end
   

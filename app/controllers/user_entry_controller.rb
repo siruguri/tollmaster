@@ -36,7 +36,8 @@ class UserEntryController < ApplicationController
       rescue ActiveRecord::Rollback, ActiveRecord::RecordInvalid  => e
         alert = 'Failure. Please try again.'
       else
-        notice = t(:use_sms_directions_html).html_safe
+        notice = t(:first_use_sms_directions_html,
+                   sms_resend_link: resend_sms_user_entry_path(primary_key: v.phone_number)).html_safe
       end
     end
 
